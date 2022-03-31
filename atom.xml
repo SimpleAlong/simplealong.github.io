@@ -3,11 +3,11 @@
   <title>Hexo_Blog</title>
   
   
-  <link href="http://example.com/atom.xml" rel="self"/>
+  <link href="http://simplealong.github.io/atom.xml" rel="self"/>
   
-  <link href="http://example.com/"/>
+  <link href="http://simplealong.github.io/"/>
   <updated>2022-03-31T02:13:03.255Z</updated>
-  <id>http://example.com/</id>
+  <id>http://simplealong.github.io/</id>
   
   <author>
     <name>Mr.Liu</name>
@@ -18,8 +18,8 @@
   
   <entry>
     <title>Hello World</title>
-    <link href="http://example.com/2022/03/31/hello-world/"/>
-    <id>http://example.com/2022/03/31/hello-world/</id>
+    <link href="http://simplealong.github.io/2022/03/31/hello-world/"/>
+    <id>http://simplealong.github.io/2022/03/31/hello-world/</id>
     <published>2022-03-31T02:13:03.255Z</published>
     <updated>2022-03-31T02:13:03.255Z</updated>
     
