@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title>Hello World2222</title>
+    <url>/2022/03/31/categories/</url>
+    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+]]></content>
+      <categories>
+        <category>你好呀</category>
+      </categories>
+      <tags>
+        <tag>Hello World2222</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>go hash</title>
+    <url>/2022/03/31/go_lhash/</url>
+    <content><![CDATA[<h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">package bash</span><br><span class="line"></span><br><span class="line">type LHash map[interface&#123;&#125;]int64</span><br><span class="line"></span><br><span class="line">func NewLHash() LHash &#123;</span><br><span class="line">    return make(LHash)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// Add 加法</span><br><span class="line">func (l LHash) Add(k interface&#123;&#125;, v int64) &#123;</span><br><span class="line">    l[k] += v</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// Sub 减法</span><br><span class="line">func (l LHash) Sub(k interface&#123;&#125;, v int64) &#123;</span><br><span class="line">    l[k] -= v</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// Save 保存变更</span><br><span class="line">func (l LHash) Save(k interface&#123;&#125;, v int64) &#123;</span><br><span class="line">    l[k] = v</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// Multi 乘法</span><br><span class="line">func (l LHash) Multi(k interface&#123;&#125;, v int64) &#123;</span><br><span class="line">    if _, ok := l[k]; !ok &#123;</span><br><span class="line">        l[k] = v</span><br><span class="line">        return</span><br><span class="line">    &#125;</span><br><span class="line">    l[k] = l[k] * v</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// Division 除法</span><br><span class="line">func (l LHash) Division(k interface&#123;&#125;, v int64) &#123;</span><br><span class="line">    if _, ok := l[k]; !ok &#123;</span><br><span class="line">        l[k] = v</span><br><span class="line">        return</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    l[k] = l[k] / v</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 获得</span><br><span class="line">func (l LHash) GetVal(k interface&#123;&#125;) (ok bool, v int64) &#123;</span><br><span class="line">    v, ok = l[k]</span><br><span class="line">    return</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// IsExist 是否存在</span><br><span class="line">func (l LHash) IsExist(k interface&#123;&#125;) (isExist bool) &#123;</span><br><span class="line">    _, isExist = l[k]</span><br><span class="line">    return</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// NotExistAndSave 不存在插入, 存在不更新 返回是否存在</span><br><span class="line">func (l LHash) NotExistAndSave(k interface&#123;&#125;, v int64) (isExist bool) &#123;</span><br><span class="line">    if _, ok := l[k]; !ok &#123;</span><br><span class="line">        l[k] = v</span><br><span class="line">        return false</span><br><span class="line">    &#125;</span><br><span class="line">    return true</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>go</category>
+      </categories>
+      <tags>
+        <tag>go</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Hello World222</title>
+    <url>/2023/03/31/hello-world/</url>
+    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+]]></content>
+      <categories>
+        <category>你好呀</category>
+      </categories>
+      <tags>
+        <tag>linux</tag>
+      </tags>
+  </entry>
+</search>
