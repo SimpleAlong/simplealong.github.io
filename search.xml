@@ -11,4 +11,19 @@
         <tag>golang</tag>
       </tags>
   </entry>
+  <entry>
+    <title>go 姿势</title>
+    <url>/2022/04/11/go_lhash%20copy/</url>
+    <content><![CDATA[<h3 id="学习一些go-小姿势"><a href="#学习一些go-小姿势" class="headerlink" title="学习一些go 小姿势"></a>学习一些go 小姿势</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">package main</span><br><span class="line">func main()&#123;</span><br><span class="line">    var thisIsChan chan struct&#123;&#125;</span><br><span class="line">    thisIsChan = make(chan struct&#123;&#125;)</span><br><span class="line">    // thisIsChan = make(chan struct&#123;&#125;, 10)</span><br><span class="line">    &lt;-thisIsChan</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<pre><code>以上代码中， build 正常通过， 运行就会出现painc(&quot;fatal error: all goroutines are asleep - deadlock!&quot;)
+处理：只要有一条 goroutine running 或者 sleeping 代码都可以正常运行 
+</code></pre>
+]]></content>
+      <categories>
+        <category>golang</category>
+      </categories>
+      <tags>
+        <tag>golang</tag>
+      </tags>
+  </entry>
 </search>
