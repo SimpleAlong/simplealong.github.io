@@ -83,15 +83,15 @@
 
 
 
-<meta name="description" content="学习一些go 小姿势12345678package mainfunc main()&amp;#123;    var thisIsChan chan struct&amp;#123;&amp;#125;    thisIsChan &#x3D; make(chan struct&amp;#123;&amp;#125;)    &#x2F;&#x2F; thisIsChan &#x3D; make(chan struct&amp;#123;&amp;#125;, 10)    &lt;-thi">
+<meta name="description" content="学习一些go 小姿势chan 跟 goroutine12345678package mainfunc main()&amp;#123;    var thisIsChan chan struct&amp;#123;&amp;#125;    thisIsChan &#x3D; make(chan struct&amp;#123;&amp;#125;)    &#x2F;&#x2F; thisIsChan &#x3D; make(chan struct&amp;#123;&amp;#125;,">
 <meta property="og:type" content="article">
 <meta property="og:title" content="go 姿势">
 <meta property="og:url" content="http://simplealong.github.io/2022/04/11/go_lhash%20copy/index.html">
 <meta property="og:site_name" content="Mr.Liu">
-<meta property="og:description" content="学习一些go 小姿势12345678package mainfunc main()&amp;#123;    var thisIsChan chan struct&amp;#123;&amp;#125;    thisIsChan &#x3D; make(chan struct&amp;#123;&amp;#125;)    &#x2F;&#x2F; thisIsChan &#x3D; make(chan struct&amp;#123;&amp;#125;, 10)    &lt;-thi">
+<meta property="og:description" content="学习一些go 小姿势chan 跟 goroutine12345678package mainfunc main()&amp;#123;    var thisIsChan chan struct&amp;#123;&amp;#125;    thisIsChan &#x3D; make(chan struct&amp;#123;&amp;#125;)    &#x2F;&#x2F; thisIsChan &#x3D; make(chan struct&amp;#123;&amp;#125;,">
 <meta property="og:locale">
 <meta property="article:published_time" content="2022-04-11T02:18:26.000Z">
-<meta property="article:modified_time" content="2022-04-11T03:04:25.868Z">
+<meta property="article:modified_time" content="2022-04-11T03:06:57.844Z">
 <meta property="article:author" content="Mr.Liu">
 <meta property="article:tag" content="golang">
 <meta name="twitter:card" content="summary">
@@ -390,11 +390,11 @@
       
 
       
-        <h3 id="学习一些go-小姿势"><a href="#学习一些go-小姿势" class="headerlink" title="学习一些go 小姿势"></a>学习一些go 小姿势</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line">func main()&#123;</span><br><span class="line">    var thisIsChan chan struct&#123;&#125;</span><br><span class="line">    thisIsChan = make(chan struct&#123;&#125;)</span><br><span class="line">    // thisIsChan = make(chan struct&#123;&#125;, 10)</span><br><span class="line">    &lt;-thisIsChan</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+        <h3 id="学习一些go-小姿势"><a href="#学习一些go-小姿势" class="headerlink" title="学习一些go 小姿势"></a>学习一些go 小姿势</h3><h4 id="chan-跟-goroutine"><a href="#chan-跟-goroutine" class="headerlink" title="chan 跟 goroutine"></a>chan 跟 goroutine</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line">func main()&#123;</span><br><span class="line">    var thisIsChan chan struct&#123;&#125;</span><br><span class="line">    thisIsChan = make(chan struct&#123;&#125;)</span><br><span class="line">    // thisIsChan = make(chan struct&#123;&#125;, 10)</span><br><span class="line">    &lt;-thisIsChan</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 <pre><code>以上代码中， build 正常通过， 运行就会出现painc(&quot;fatal error: all goroutines are asleep - deadlock!&quot;)
-处理：只要有一条 goroutine running 或者 sleeping 代码都可以正常运行 
+处理：只要有一条 goroutine running 代码都可以正常运行 
 </code></pre>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line">  func main()&#123;</span><br><span class="line">      a := []int16&#123;1, 2, 3&#125;</span><br><span class="line">      b := a[1:]</span><br><span class="line">      b[0] = 4</span><br><span class="line">      // 4 , 4</span><br><span class="line">      // a b 地址相同</span><br><span class="line">      fmt.Println(a[1], b[0])</span><br><span class="line">      </span><br><span class="line">      a = append(a, 6)</span><br><span class="line">      b[0] = 5</span><br><span class="line">      // 4 5</span><br><span class="line">      // 这是a append 地址发生变化</span><br><span class="line">      fmt.Println(a[1], b[0])</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<h4 id="slice-地址问题"><a href="#slice-地址问题" class="headerlink" title="slice 地址问题"></a>slice 地址问题</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line">  func main()&#123;</span><br><span class="line">      a := []int16&#123;1, 2, 3&#125;</span><br><span class="line">      b := a[1:]</span><br><span class="line">      b[0] = 4</span><br><span class="line">      // 4 , 4</span><br><span class="line">      // a b 地址相同</span><br><span class="line">      fmt.Println(a[1], b[0])</span><br><span class="line">      </span><br><span class="line">      a = append(a, 6)</span><br><span class="line">      b[0] = 5</span><br><span class="line">      // 4 5</span><br><span class="line">      // 这是a append 地址发生变化</span><br><span class="line">      fmt.Println(a[1], b[0])</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
       
     </div>
     
@@ -654,7 +654,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%BA%9Bgo-%E5%B0%8F%E5%A7%BF%E5%8A%BF"><span class="nav-number">1.</span> <span class="nav-text">学习一些go 小姿势</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%BA%9Bgo-%E5%B0%8F%E5%A7%BF%E5%8A%BF"><span class="nav-number">1.</span> <span class="nav-text">学习一些go 小姿势</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#chan-%E8%B7%9F-goroutine"><span class="nav-number">1.1.</span> <span class="nav-text">chan 跟 goroutine</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#slice-%E5%9C%B0%E5%9D%80%E9%97%AE%E9%A2%98"><span class="nav-number">1.2.</span> <span class="nav-text">slice 地址问题</span></a></li></ol></li></ol></div>
             
 
           </div>
