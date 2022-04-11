@@ -83,15 +83,15 @@
 
 
 
-<meta name="description" content="学习一些go 小姿势chan 跟 goroutine12345678package mainfunc main()&amp;#123;    var thisIsChan chan struct&amp;#123;&amp;#125;    thisIsChan &#x3D; make(chan struct&amp;#123;&amp;#125;)    &#x2F;&#x2F; thisIsChan &#x3D; make(chan struct&amp;#123;&amp;#125;,">
+<meta name="description" content="学习一下 go 小细节chan 跟 goroutine12345678package mainfunc main()&amp;#123;    var thisIsChan chan struct&amp;#123;&amp;#125;    thisIsChan &#x3D; make(chan struct&amp;#123;&amp;#125;)    &#x2F;&#x2F; thisIsChan &#x3D; make(chan struct&amp;#123;&amp;#125;">
 <meta property="og:type" content="article">
-<meta property="og:title" content="go 姿势">
-<meta property="og:url" content="http://simplealong.github.io/2022/04/11/go_lhash%20copy/index.html">
+<meta property="og:title" content="go 小知识">
+<meta property="og:url" content="http://simplealong.github.io/2022/04/11/go_tips/index.html">
 <meta property="og:site_name" content="Mr.Liu">
-<meta property="og:description" content="学习一些go 小姿势chan 跟 goroutine12345678package mainfunc main()&amp;#123;    var thisIsChan chan struct&amp;#123;&amp;#125;    thisIsChan &#x3D; make(chan struct&amp;#123;&amp;#125;)    &#x2F;&#x2F; thisIsChan &#x3D; make(chan struct&amp;#123;&amp;#125;,">
+<meta property="og:description" content="学习一下 go 小细节chan 跟 goroutine12345678package mainfunc main()&amp;#123;    var thisIsChan chan struct&amp;#123;&amp;#125;    thisIsChan &#x3D; make(chan struct&amp;#123;&amp;#125;)    &#x2F;&#x2F; thisIsChan &#x3D; make(chan struct&amp;#123;&amp;#125;">
 <meta property="og:locale">
 <meta property="article:published_time" content="2022-04-11T02:18:26.000Z">
-<meta property="article:modified_time" content="2022-04-11T03:06:57.844Z">
+<meta property="article:modified_time" content="2022-04-11T03:16:10.704Z">
 <meta property="article:author" content="Mr.Liu">
 <meta property="article:tag" content="golang">
 <meta name="twitter:card" content="summary">
@@ -124,13 +124,13 @@
 
 
 
-  <link rel="canonical" href="http://simplealong.github.io/2022/04/11/go_lhash copy/"/>
+  <link rel="canonical" href="http://simplealong.github.io/2022/04/11/go_tips/"/>
 
 
 
 
 
-  <title>go 姿势 | Mr.Liu</title>
+  <title>go 小知识 | Mr.Liu</title>
   
 
 
@@ -301,7 +301,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://simplealong.github.io/2022/04/11/go_lhash%20copy/">
+    <link itemprop="mainEntityOfPage" href="http://simplealong.github.io/2022/04/11/go_tips/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="">
@@ -318,7 +318,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">go 姿势</h1>
+          <h1 class="post-title" itemprop="name headline">go 小知识</h1>
         
 
         <div class="post-meta">
@@ -390,11 +390,22 @@
       
 
       
-        <h3 id="学习一些go-小姿势"><a href="#学习一些go-小姿势" class="headerlink" title="学习一些go 小姿势"></a>学习一些go 小姿势</h3><h4 id="chan-跟-goroutine"><a href="#chan-跟-goroutine" class="headerlink" title="chan 跟 goroutine"></a>chan 跟 goroutine</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line">func main()&#123;</span><br><span class="line">    var thisIsChan chan struct&#123;&#125;</span><br><span class="line">    thisIsChan = make(chan struct&#123;&#125;)</span><br><span class="line">    // thisIsChan = make(chan struct&#123;&#125;, 10)</span><br><span class="line">    &lt;-thisIsChan</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+        <h3 id="学习一下-go-小细节"><a href="#学习一下-go-小细节" class="headerlink" title="学习一下 go 小细节"></a>学习一下 go 小细节</h3><h4 id="chan-跟-goroutine"><a href="#chan-跟-goroutine" class="headerlink" title="chan 跟 goroutine"></a>chan 跟 goroutine</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line">func main()&#123;</span><br><span class="line">    var thisIsChan chan struct&#123;&#125;</span><br><span class="line">    thisIsChan = make(chan struct&#123;&#125;)</span><br><span class="line">    // thisIsChan = make(chan struct&#123;&#125;, 10)</span><br><span class="line">    &lt;-thisIsChan</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 <pre><code>以上代码中， build 正常通过， 运行就会出现painc(&quot;fatal error: all goroutines are asleep - deadlock!&quot;)
 处理：只要有一条 goroutine running 代码都可以正常运行 
 </code></pre>
 <h4 id="slice-地址问题"><a href="#slice-地址问题" class="headerlink" title="slice 地址问题"></a>slice 地址问题</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line">  func main()&#123;</span><br><span class="line">      a := []int16&#123;1, 2, 3&#125;</span><br><span class="line">      b := a[1:]</span><br><span class="line">      b[0] = 4</span><br><span class="line">      // 4 , 4</span><br><span class="line">      // a b 地址相同</span><br><span class="line">      fmt.Println(a[1], b[0])</span><br><span class="line">      </span><br><span class="line">      a = append(a, 6)</span><br><span class="line">      b[0] = 5</span><br><span class="line">      // 4 5</span><br><span class="line">      // 这是a append 地址发生变化</span><br><span class="line">      fmt.Println(a[1], b[0])</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="map-遍历"><a href="#map-遍历" class="headerlink" title="map 遍历"></a>map 遍历</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line">    func main() &#123;</span><br><span class="line">        m := map[int]string&#123;0:&quot;一&quot;,1:&quot;二&quot;&#125;</span><br><span class="line">        for k,v := range m &#123;</span><br><span class="line">            fmt.Println(k,v)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code>这是时候我们会一口气的回答上:
+    0 &quot;一&quot;
+    1 &quot;二&quot;
+肯定会忘map是无序
+    1 &quot;二&quot;
+    0 &quot;一&quot;
+这个也是正确的答案 
+</code></pre>
+
       
     </div>
     
@@ -414,7 +425,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://simplealong.github.io/2022/04/11/go_lhash%20copy/" title="go 姿势">http://simplealong.github.io/2022/04/11/go_lhash%20copy/</a>
+    <a href="http://simplealong.github.io/2022/04/11/go_tips/" title="go 小知识">http://simplealong.github.io/2022/04/11/go_tips/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>
@@ -654,7 +665,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%BA%9Bgo-%E5%B0%8F%E5%A7%BF%E5%8A%BF"><span class="nav-number">1.</span> <span class="nav-text">学习一些go 小姿势</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#chan-%E8%B7%9F-goroutine"><span class="nav-number">1.1.</span> <span class="nav-text">chan 跟 goroutine</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#slice-%E5%9C%B0%E5%9D%80%E9%97%AE%E9%A2%98"><span class="nav-number">1.2.</span> <span class="nav-text">slice 地址问题</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%8B-go-%E5%B0%8F%E7%BB%86%E8%8A%82"><span class="nav-number">1.</span> <span class="nav-text">学习一下 go 小细节</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#chan-%E8%B7%9F-goroutine"><span class="nav-number">1.1.</span> <span class="nav-text">chan 跟 goroutine</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#slice-%E5%9C%B0%E5%9D%80%E9%97%AE%E9%A2%98"><span class="nav-number">1.2.</span> <span class="nav-text">slice 地址问题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#map-%E9%81%8D%E5%8E%86"><span class="nav-number">1.3.</span> <span class="nav-text">map 遍历</span></a></li></ol></li></ol></div>
             
 
           </div>

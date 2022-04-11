@@ -299,7 +299,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://simplealong.github.io/2022/04/11/go_lhash%20copy/">
+    <link itemprop="mainEntityOfPage" href="http://simplealong.github.io/2022/04/11/go_tips/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="">
@@ -318,7 +318,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2022/04/11/go_lhash%20copy/" itemprop="url">go 姿势</a></h1>
+                <a class="post-title-link" href="/2022/04/11/go_tips/" itemprop="url">go 小知识</a></h1>
         
 
         <div class="post-meta">
@@ -392,11 +392,22 @@
       
         
           
-            <h3 id="学习一些go-小姿势"><a href="#学习一些go-小姿势" class="headerlink" title="学习一些go 小姿势"></a>学习一些go 小姿势</h3><h4 id="chan-跟-goroutine"><a href="#chan-跟-goroutine" class="headerlink" title="chan 跟 goroutine"></a>chan 跟 goroutine</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line">func main()&#123;</span><br><span class="line">    var thisIsChan chan struct&#123;&#125;</span><br><span class="line">    thisIsChan = make(chan struct&#123;&#125;)</span><br><span class="line">    // thisIsChan = make(chan struct&#123;&#125;, 10)</span><br><span class="line">    &lt;-thisIsChan</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+            <h3 id="学习一下-go-小细节"><a href="#学习一下-go-小细节" class="headerlink" title="学习一下 go 小细节"></a>学习一下 go 小细节</h3><h4 id="chan-跟-goroutine"><a href="#chan-跟-goroutine" class="headerlink" title="chan 跟 goroutine"></a>chan 跟 goroutine</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line">func main()&#123;</span><br><span class="line">    var thisIsChan chan struct&#123;&#125;</span><br><span class="line">    thisIsChan = make(chan struct&#123;&#125;)</span><br><span class="line">    // thisIsChan = make(chan struct&#123;&#125;, 10)</span><br><span class="line">    &lt;-thisIsChan</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 <pre><code>以上代码中， build 正常通过， 运行就会出现painc(&quot;fatal error: all goroutines are asleep - deadlock!&quot;)
 处理：只要有一条 goroutine running 代码都可以正常运行 
 </code></pre>
 <h4 id="slice-地址问题"><a href="#slice-地址问题" class="headerlink" title="slice 地址问题"></a>slice 地址问题</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line">  func main()&#123;</span><br><span class="line">      a := []int16&#123;1, 2, 3&#125;</span><br><span class="line">      b := a[1:]</span><br><span class="line">      b[0] = 4</span><br><span class="line">      // 4 , 4</span><br><span class="line">      // a b 地址相同</span><br><span class="line">      fmt.Println(a[1], b[0])</span><br><span class="line">      </span><br><span class="line">      a = append(a, 6)</span><br><span class="line">      b[0] = 5</span><br><span class="line">      // 4 5</span><br><span class="line">      // 这是a append 地址发生变化</span><br><span class="line">      fmt.Println(a[1], b[0])</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="map-遍历"><a href="#map-遍历" class="headerlink" title="map 遍历"></a>map 遍历</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line">    func main() &#123;</span><br><span class="line">        m := map[int]string&#123;0:&quot;一&quot;,1:&quot;二&quot;&#125;</span><br><span class="line">        for k,v := range m &#123;</span><br><span class="line">            fmt.Println(k,v)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code>这是时候我们会一口气的回答上:
+    0 &quot;一&quot;
+    1 &quot;二&quot;
+肯定会忘map是无序
+    1 &quot;二&quot;
+    0 &quot;一&quot;
+这个也是正确的答案 
+</code></pre>
+
           
         
       
