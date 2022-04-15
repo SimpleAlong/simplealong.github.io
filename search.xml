@@ -12,6 +12,22 @@
       </tags>
   </entry>
   <entry>
+    <title>Context</title>
+    <url>/2022/04/15/go_context/</url>
+    <content><![CDATA[<p>包context定义了Context类型，它跨API边界和进程之间传递截止日期、取消信号和其他请求范围的值。</p>
+<p>对服务器的传入请求应创建Context，对服务器的传出调用应接受Context。它们之间的函数调用链必须传播上下文，可以选择将其替换为使用WithCancel、WithDeadline、WithTimeout或WithValue创建的派生上下文。取消某个上下文时，从该上下文派生的所有上下文也将被取消。<br>WithCancel、WithDeadline和WithTimeout函数接受一个上下文（父上下文），并返回一个派生上下文（子上下文）和一个CancelFunc。调用CancelFunc会取</p>
+<p>消子项及其子项，删除父项对子项的引用，并停止任何关联的计时器。未能调用CancelFunc会泄漏子级及其子级，直到父级被取消或计时器触发。go vet工具检查所有控制流路径上是否使用了CancelFuncs。</p>
+<p>使用上下文的程序应遵循以下规则，以保持包之间的接口一致，并启用静态分析工具来检查上下文传播：</p>
+<p>不要在结构类型中存储上下文；相反，将上下文显式地传递给每个需要它的函数。上下文应该是第一个参数，通常命名为ctx：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>golang</category>
+      </categories>
+      <tags>
+        <tag>golang</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>go 小知识</title>
     <url>/2022/04/11/go_tips/</url>
     <content><![CDATA[<h3 id="学习一下-go-小细节"><a href="#学习一下-go-小细节" class="headerlink" title="学习一下 go 小细节"></a>学习一下 go 小细节</h3><h4 id="chan-跟-goroutine"><a href="#chan-跟-goroutine" class="headerlink" title="chan 跟 goroutine"></a>chan 跟 goroutine</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">package main</span><br><span class="line">func main()&#123;</span><br><span class="line">    var thisIsChan chan struct&#123;&#125;</span><br><span class="line">    thisIsChan = make(chan struct&#123;&#125;)</span><br><span class="line">    // thisIsChan = make(chan struct&#123;&#125;, 10)</span><br><span class="line">    &lt;-thisIsChan</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
@@ -30,22 +46,6 @@
 这个也是正确的答案 
 </code></pre>
 ]]></content>
-      <categories>
-        <category>golang</category>
-      </categories>
-      <tags>
-        <tag>golang</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Context</title>
-    <url>/2022/04/15/go_context/</url>
-    <content><![CDATA[<p>包context定义了Context类型，它跨API边界和进程之间传递截止日期、取消信号和其他请求范围的值。</p>
-<p>对服务器的传入请求应创建Context，对服务器的传出调用应接受Context。它们之间的函数调用链必须传播上下文，可以选择将其替换为使用WithCancel、WithDeadline、WithTimeout或WithValue创建的派生上下文。取消某个上下文时，从该上下文派生的所有上下文也将被取消。<br>WithCancel、WithDeadline和WithTimeout函数接受一个上下文（父上下文），并返回一个派生上下文（子上下文）和一个CancelFunc。调用CancelFunc会取</p>
-<p>消子项及其子项，删除父项对子项的引用，并停止任何关联的计时器。未能调用CancelFunc会泄漏子级及其子级，直到父级被取消或计时器触发。go vet工具检查所有控制流路径上是否使用了CancelFuncs。</p>
-<p>使用上下文的程序应遵循以下规则，以保持包之间的接口一致，并启用静态分析工具来检查上下文传播：</p>
-<p>不要在结构类型中存储上下文；相反，将上下文显式地传递给每个需要它的函数。上下文应该是第一个参数，通常命名为ctx：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>]]></content>
       <categories>
         <category>golang</category>
       </categories>
