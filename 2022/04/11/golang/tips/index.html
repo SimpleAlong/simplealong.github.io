@@ -83,15 +83,15 @@
 
 
 
-<meta name="description" content="学习一下 go 小细节chan 跟 goroutine12345678package mainfunc main()&amp;#123;    var thisIsChan chan struct&amp;#123;&amp;#125;    thisIsChan &#x3D; make(chan struct&amp;#123;&amp;#125;)    &#x2F;&#x2F; thisIsChan &#x3D; make(chan struct&amp;#123;&amp;#125;">
+<meta name="description" content="学习一下 go 小细节">
 <meta property="og:type" content="article">
 <meta property="og:title" content="go 小知识">
 <meta property="og:url" content="http://simplealong.github.io/2022/04/11/golang/tips/index.html">
 <meta property="og:site_name" content="Mr.Liu">
-<meta property="og:description" content="学习一下 go 小细节chan 跟 goroutine12345678package mainfunc main()&amp;#123;    var thisIsChan chan struct&amp;#123;&amp;#125;    thisIsChan &#x3D; make(chan struct&amp;#123;&amp;#125;)    &#x2F;&#x2F; thisIsChan &#x3D; make(chan struct&amp;#123;&amp;#125;">
+<meta property="og:description" content="学习一下 go 小细节">
 <meta property="og:locale">
 <meta property="article:published_time" content="2022-04-11T02:18:26.000Z">
-<meta property="article:modified_time" content="2022-04-15T08:50:58.719Z">
+<meta property="article:modified_time" content="2026-03-12T11:39:14.471Z">
 <meta property="article:author" content="Mr.Liu">
 <meta property="article:tag" content="golang">
 <meta name="twitter:card" content="summary">
@@ -376,6 +376,10 @@
           
 
           
+              <div class="post-description">
+                   学习一下 go 小细节
+              </div>
+          
 
         </div>
       </header>
@@ -390,13 +394,13 @@
       
 
       
-        <h3 id="学习一下-go-小细节"><a href="#学习一下-go-小细节" class="headerlink" title="学习一下 go 小细节"></a>学习一下 go 小细节</h3><h4 id="chan-跟-goroutine"><a href="#chan-跟-goroutine" class="headerlink" title="chan 跟 goroutine"></a>chan 跟 goroutine</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line">func main()&#123;</span><br><span class="line">    var thisIsChan chan struct&#123;&#125;</span><br><span class="line">    thisIsChan = make(chan struct&#123;&#125;)</span><br><span class="line">    // thisIsChan = make(chan struct&#123;&#125;, 10)</span><br><span class="line">    &lt;-thisIsChan</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+        <h3 id="学习一下-go-小细节"><a href="#学习一下-go-小细节" class="headerlink" title="学习一下 go 小细节"></a>学习一下 go 小细节</h3><h4 id="chan-跟-goroutine"><a href="#chan-跟-goroutine" class="headerlink" title="chan 跟 goroutine"></a>chan 跟 goroutine</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">var</span> thisIsChan <span class="keyword">chan</span> <span class="keyword">struct</span>&#123;&#125;</span><br><span class="line">    thisIsChan = <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">struct</span>&#123;&#125;)</span><br><span class="line">    <span class="comment">// thisIsChan = make(chan struct&#123;&#125;, 10)</span></span><br><span class="line">    &lt;-thisIsChan</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 <pre><code>以上代码中， build 正常通过， 运行就会出现painc(&quot;fatal error: all goroutines are asleep - deadlock!&quot;)
 处理：只要有一条 goroutine running 代码都可以正常运行 
 </code></pre>
-<h4 id="slice-地址问题"><a href="#slice-地址问题" class="headerlink" title="slice 地址问题"></a>slice 地址问题</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line">  func main()&#123;</span><br><span class="line">      a := []int16&#123;1, 2, 3&#125;</span><br><span class="line">      b := a[1:]</span><br><span class="line">      b[0] = 4</span><br><span class="line">      // 4 , 4</span><br><span class="line">      // a b 地址相同</span><br><span class="line">      fmt.Println(a[1], b[0])</span><br><span class="line">      </span><br><span class="line">      a = append(a, 6)</span><br><span class="line">      b[0] = 5</span><br><span class="line">      // 4 5</span><br><span class="line">      // 这是a append 地址发生变化</span><br><span class="line">      fmt.Println(a[1], b[0])</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<h4 id="slice-地址问题"><a href="#slice-地址问题" class="headerlink" title="slice 地址问题"></a>slice 地址问题</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line">  <span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">      a := []<span class="type">int16</span>&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>&#125;</span><br><span class="line">      b := a[<span class="number">1</span>:]</span><br><span class="line">      b[<span class="number">0</span>] = <span class="number">4</span></span><br><span class="line">      <span class="comment">// 4 , 4</span></span><br><span class="line">      <span class="comment">// a b 地址相同</span></span><br><span class="line">      fmt.Println(a[<span class="number">1</span>], b[<span class="number">0</span>])</span><br><span class="line">      </span><br><span class="line">      a = <span class="built_in">append</span>(a, <span class="number">6</span>)</span><br><span class="line">      b[<span class="number">0</span>] = <span class="number">5</span></span><br><span class="line">      <span class="comment">// 4 5</span></span><br><span class="line">      <span class="comment">// 这是a append 地址发生变化</span></span><br><span class="line">      fmt.Println(a[<span class="number">1</span>], b[<span class="number">0</span>])</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
 
-<h4 id="map-遍历"><a href="#map-遍历" class="headerlink" title="map 遍历"></a>map 遍历</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line">    func main() &#123;</span><br><span class="line">        m := map[int]string&#123;0:&quot;一&quot;,1:&quot;二&quot;&#125;</span><br><span class="line">        for k,v := range m &#123;</span><br><span class="line">            fmt.Println(k,v)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="map-遍历"><a href="#map-遍历" class="headerlink" title="map 遍历"></a>map 遍历</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">        m := <span class="keyword">map</span>[<span class="type">int</span>]<span class="type">string</span>&#123;<span class="number">0</span>:<span class="string">&quot;一&quot;</span>,<span class="number">1</span>:<span class="string">&quot;二&quot;</span>&#125;</span><br><span class="line">        <span class="keyword">for</span> k,v := <span class="keyword">range</span> m &#123;</span><br><span class="line">            fmt.Println(k,v)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <pre><code>这是时候我们会一口气的回答上:
     0 &quot;一&quot;
     1 &quot;二&quot;
@@ -584,7 +588,7 @@
               
                 <a href="/">
               
-                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-count">6</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -595,7 +599,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-count">4</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -606,7 +610,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-count">5</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -689,7 +693,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; 2021 &mdash; <span itemprop="copyrightYear">2023</span>
+        <div class="copyright">&copy; 2021 &mdash; <span itemprop="copyrightYear">2026</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>

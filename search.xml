@@ -42,13 +42,13 @@
   <entry>
     <title>go 小知识</title>
     <url>/2022/04/11/golang/tips/</url>
-    <content><![CDATA[<h3 id="学习一下-go-小细节"><a href="#学习一下-go-小细节" class="headerlink" title="学习一下 go 小细节"></a>学习一下 go 小细节</h3><h4 id="chan-跟-goroutine"><a href="#chan-跟-goroutine" class="headerlink" title="chan 跟 goroutine"></a>chan 跟 goroutine</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">package main</span><br><span class="line">func main()&#123;</span><br><span class="line">    var thisIsChan chan struct&#123;&#125;</span><br><span class="line">    thisIsChan = make(chan struct&#123;&#125;)</span><br><span class="line">    // thisIsChan = make(chan struct&#123;&#125;, 10)</span><br><span class="line">    &lt;-thisIsChan</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+    <content><![CDATA[<h3 id="学习一下-go-小细节"><a href="#学习一下-go-小细节" class="headerlink" title="学习一下 go 小细节"></a>学习一下 go 小细节</h3><h4 id="chan-跟-goroutine"><a href="#chan-跟-goroutine" class="headerlink" title="chan 跟 goroutine"></a>chan 跟 goroutine</h4><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">var</span> thisIsChan <span class="keyword">chan</span> <span class="keyword">struct</span>&#123;&#125;</span><br><span class="line">    thisIsChan = <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">struct</span>&#123;&#125;)</span><br><span class="line">    <span class="comment">// thisIsChan = make(chan struct&#123;&#125;, 10)</span></span><br><span class="line">    &lt;-thisIsChan</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 <pre><code>以上代码中， build 正常通过， 运行就会出现painc(&quot;fatal error: all goroutines are asleep - deadlock!&quot;)
 处理：只要有一条 goroutine running 代码都可以正常运行 
 </code></pre>
-<h4 id="slice-地址问题"><a href="#slice-地址问题" class="headerlink" title="slice 地址问题"></a>slice 地址问题</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">package main</span><br><span class="line">  func main()&#123;</span><br><span class="line">      a := []int16&#123;1, 2, 3&#125;</span><br><span class="line">      b := a[1:]</span><br><span class="line">      b[0] = 4</span><br><span class="line">      // 4 , 4</span><br><span class="line">      // a b 地址相同</span><br><span class="line">      fmt.Println(a[1], b[0])</span><br><span class="line">      </span><br><span class="line">      a = append(a, 6)</span><br><span class="line">      b[0] = 5</span><br><span class="line">      // 4 5</span><br><span class="line">      // 这是a append 地址发生变化</span><br><span class="line">      fmt.Println(a[1], b[0])</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<h4 id="slice-地址问题"><a href="#slice-地址问题" class="headerlink" title="slice 地址问题"></a>slice 地址问题</h4><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line">  <span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">      a := []<span class="type">int16</span>&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>&#125;</span><br><span class="line">      b := a[<span class="number">1</span>:]</span><br><span class="line">      b[<span class="number">0</span>] = <span class="number">4</span></span><br><span class="line">      <span class="comment">// 4 , 4</span></span><br><span class="line">      <span class="comment">// a b 地址相同</span></span><br><span class="line">      fmt.Println(a[<span class="number">1</span>], b[<span class="number">0</span>])</span><br><span class="line">      </span><br><span class="line">      a = <span class="built_in">append</span>(a, <span class="number">6</span>)</span><br><span class="line">      b[<span class="number">0</span>] = <span class="number">5</span></span><br><span class="line">      <span class="comment">// 4 5</span></span><br><span class="line">      <span class="comment">// 这是a append 地址发生变化</span></span><br><span class="line">      fmt.Println(a[<span class="number">1</span>], b[<span class="number">0</span>])</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
 
-<h4 id="map-遍历"><a href="#map-遍历" class="headerlink" title="map 遍历"></a>map 遍历</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">package main</span><br><span class="line">    func main() &#123;</span><br><span class="line">        m := map[int]string&#123;0:&quot;一&quot;,1:&quot;二&quot;&#125;</span><br><span class="line">        for k,v := range m &#123;</span><br><span class="line">            fmt.Println(k,v)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="map-遍历"><a href="#map-遍历" class="headerlink" title="map 遍历"></a>map 遍历</h4><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">        m := <span class="keyword">map</span>[<span class="type">int</span>]<span class="type">string</span>&#123;<span class="number">0</span>:<span class="string">&quot;一&quot;</span>,<span class="number">1</span>:<span class="string">&quot;二&quot;</span>&#125;</span><br><span class="line">        <span class="keyword">for</span> k,v := <span class="keyword">range</span> m &#123;</span><br><span class="line">            fmt.Println(k,v)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <pre><code>这是时候我们会一口气的回答上:
     0 &quot;一&quot;
     1 &quot;二&quot;
@@ -63,6 +63,574 @@
       </categories>
       <tags>
         <tag>golang</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>trae skill</title>
+    <url>/2026/03/12/AI/SKILL/</url>
+    <content><![CDATA[<h1 id="Lite-Ulala-服务端开发指南"><a href="#Lite-Ulala-服务端开发指南" class="headerlink" title="Lite-Ulala 服务端开发指南"></a>Lite-Ulala 服务端开发指南</h1><h2 id="新模块开发流程"><a href="#新模块开发流程" class="headerlink" title="新模块开发流程"></a>新模块开发流程</h2><p>当接到新功能需求时，按以下顺序开发：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">需求分析</span><br><span class="line">    │</span><br><span class="line">    ▼</span><br><span class="line">┌─────────────────────────────────────────────────────────────┐</span><br><span class="line">│  第一步：定义 Proto 协议                                      │</span><br><span class="line">│  文件: api/&#123;module&#125;.proto                                    │</span><br><span class="line">│  内容: 请求/响应消息、通知消息、HTTP跨服消息                    │</span><br><span class="line">│  命令: 无需执行命令，直接创建文件                              │</span><br><span class="line">└─────────────────────────────────────────────────────────────┘</span><br><span class="line">    │</span><br><span class="line">    ▼</span><br><span class="line">┌─────────────────────────────────────────────────────────────┐</span><br><span class="line">│  第二步：设计数据库表                                         │</span><br><span class="line">│  文件: database/gameserver/changes/&#123;table&#125;/0.0.01.001.php    │</span><br><span class="line">│  索引: database/gameserver/mdb_index.php                     │</span><br><span class="line">│  命令: make mdb                                              │</span><br><span class="line">└─────────────────────────────────────────────────────────────┘</span><br><span class="line">    │</span><br><span class="line">    ▼</span><br><span class="line">┌─────────────────────────────────────────────────────────────┐</span><br><span class="line">│  第三步：生成协议代码                                         │</span><br><span class="line">│  命令: make proto_gen                                        │</span><br><span class="line">│  生成: internal/gameserver/module/modules/&#123;module&#125;/*.pb.go   │</span><br><span class="line">└─────────────────────────────────────────────────────────────┘</span><br><span class="line">    │</span><br><span class="line">    ▼</span><br><span class="line">┌─────────────────────────────────────────────────────────────┐</span><br><span class="line">│  第四步：生成模块接口                                         │</span><br><span class="line">│  命令: make agent                                            │</span><br><span class="line">│  生成: global.go, api.auto.go, hapi.go, agent.go 等          │</span><br><span class="line">└─────────────────────────────────────────────────────────────┘</span><br><span class="line">    │</span><br><span class="line">    ▼</span><br><span class="line">┌─────────────────────────────────────────────────────────────┐</span><br><span class="line">│  第五步：更新 mock/apis.go                                    │</span><br><span class="line">│  添加新模块引用，使测试可用                                    │</span><br><span class="line">│  参考: 下方&quot;mock/apis.go 更新说明&quot;章节                        │</span><br><span class="line">└─────────────────────────────────────────────────────────────┘</span><br><span class="line">    │</span><br><span class="line">    ▼</span><br><span class="line">┌─────────────────────────────────────────────────────────────┐</span><br><span class="line">│  第六步：实现业务逻辑                                         │</span><br><span class="line">│  文件: api_*_req.go, http_*.go, internal.go                  │</span><br><span class="line">│  内容: API处理函数、HTTP API、内部方法                         │</span><br><span class="line">└─────────────────────────────────────────────────────────────┘</span><br><span class="line">    │</span><br><span class="line">    ▼</span><br><span class="line">┌─────────────────────────────────────────────────────────────┐</span><br><span class="line">│  第七步：编写单元测试                                         │</span><br><span class="line">│  文件: api_*_test.go                                         │</span><br><span class="line">│  命令: make test                                             │</span><br><span class="line">└─────────────────────────────────────────────────────────────┘</span><br><span class="line">    │</span><br><span class="line">    ▼</span><br><span class="line">┌─────────────────────────────────────────────────────────────┐</span><br><span class="line">│  第八步：编译验证                                             │</span><br><span class="line">│  命令: make build                                            │</span><br><span class="line">└─────────────────────────────────────────────────────────────┘</span><br></pre></td></tr></table></figure>
+
+<h3 id="快速命令汇总"><a href="#快速命令汇总" class="headerlink" title="快速命令汇总"></a>快速命令汇总</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 完整生成流程 (第二步到第四步)</span></span><br><span class="line">make code</span><br><span class="line"></span><br><span class="line"><span class="comment"># 分步执行</span></span><br><span class="line">make mdb           <span class="comment"># 第二步：数据库迁移 + 代码生成</span></span><br><span class="line">make proto_gen     <span class="comment"># 第三步：协议代码生成</span></span><br><span class="line">make agent         <span class="comment"># 第四步：生成模块接口 + 骨架文件</span></span><br><span class="line">make fastapi       <span class="comment"># 生成API路由</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 开发验证</span></span><br><span class="line">make <span class="built_in">test</span>          <span class="comment"># 运行测试</span></span><br><span class="line">make build         <span class="comment"># 编译验证</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="项目架构"><a href="#项目架构" class="headerlink" title="项目架构"></a>项目架构</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">┌─────────────────────────────────────────────────────────────────────────┐</span><br><span class="line">│                              客户端                                      │</span><br><span class="line">└─────────────────────────────────────────────────────────────────────────┘</span><br><span class="line">                                    │ WebSocket/TCP</span><br><span class="line">                                    ▼</span><br><span class="line">┌─────────────────────────────────────────────────────────────────────────┐</span><br><span class="line">│                         fastway (网关服务)                               │</span><br><span class="line">│  - 客户端连接管理 (WebSocket/TCP)                                        │</span><br><span class="line">│  - 消息路由转发                                                          │</span><br><span class="line">│  - 服务注册发现 (etcd)                                                   │</span><br><span class="line">└─────────────────────────────────────────────────────────────────────────┘</span><br><span class="line">                                    │ 内部协议</span><br><span class="line">                                    ▼</span><br><span class="line">┌─────────────────────────────────────────────────────────────────────────┐</span><br><span class="line">│                       gameserver (游戏服务器)                            │</span><br><span class="line">│  ┌─────────────────────────────────────────────────────────────────┐   │</span><br><span class="line">│  │                    60+ 业务模块 (modules/)                        │   │</span><br><span class="line">│  │  &#123;module&#125; / pet / player / mission / activity / ...             │   │</span><br><span class="line">│  │                          ↓                                       │   │</span><br><span class="line">│  │              agent.Modules (接口聚合)                            │   │</span><br><span class="line">│  │                          ↓                                       │   │</span><br><span class="line">│  │                   直接接口调用                                    │   │</span><br><span class="line">│  └─────────────────────────────────────────────────────────────────┘   │</span><br><span class="line">│                              ↓                                          │</span><br><span class="line">│  ┌─────────────────────────────────────────────────────────────────┐   │</span><br><span class="line">│  │                    mdb (内存数据库)                               │   │</span><br><span class="line">│  │  - 全内存加载                                                     │   │</span><br><span class="line">│  │  - 异步持久化到 MySQL                                             │   │</span><br><span class="line">│  └─────────────────────────────────────────────────────────────────┘   │</span><br><span class="line">└─────────────────────────────────────────────────────────────────────────┘</span><br><span class="line">         │                                          │</span><br><span class="line">         │ HTTP (跨服通信)                           │</span><br><span class="line">         ▼                                          ▼</span><br><span class="line">┌────────────────────────┐              ┌────────────────────────┐</span><br><span class="line">│   其他 gameserver      │              │      Redis             │</span><br><span class="line">│   (跨服调用)            │              │  (缓存/排行榜/分布式锁)  │</span><br><span class="line">└────────────────────────┘              └────────────────────────┘</span><br></pre></td></tr></table></figure>
+
+<h2 id="目录结构"><a href="#目录结构" class="headerlink" title="目录结构"></a>目录结构</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lite-ulala/</span><br><span class="line">├── api/                          # 协议定义</span><br><span class="line">│   ├── share.proto               # 公共协议</span><br><span class="line">│   ├── errors.proto              # 错误码</span><br><span class="line">│   └── &#123;module&#125;.proto            # 模块协议</span><br><span class="line">│</span><br><span class="line">├── cmd/                          # 服务入口</span><br><span class="line">│   ├── gameserver/               # 游戏服务器</span><br><span class="line">│   ├── fastway/                  # 网关服务</span><br><span class="line">│   ├── passport/                 # 登录服务</span><br><span class="line">│   └── generator/                # 代码生成器</span><br><span class="line">│       ├── agent/                # 模块接口生成</span><br><span class="line">│       └── fastapi/              # API路由生成</span><br><span class="line">│</span><br><span class="line">├── configs/                      # 配置表 (CSV/JSON)</span><br><span class="line">│</span><br><span class="line">├── database/                     # 数据库迁移 (PHP)</span><br><span class="line">│   ├── framework/</span><br><span class="line">│   └── gameserver/</span><br><span class="line">│</span><br><span class="line">├── internal/</span><br><span class="line">│   ├── gameserver/</span><br><span class="line">│   │   ├── dat/                  # 配置数据结构</span><br><span class="line">│   │   ├── mdb/                  # 内存数据库</span><br><span class="line">│   │   └── module/</span><br><span class="line">│   │       ├── agent/            # 接口聚合 (自动生成)</span><br><span class="line">│   │       ├── modules/          # 业务模块</span><br><span class="line">│   │       │   └── &#123;module&#125;/</span><br><span class="line">│   │       │       ├── global.go       # 模块定义 (Mod层)</span><br><span class="line">│   │       │       ├── api.auto.go     # API入口 (自动生成, API层)</span><br><span class="line">│   │       │       ├── api_*_req.go    # API实现 (API层)</span><br><span class="line">│   │       │       ├── api_*_test.go   # API测试</span><br><span class="line">│   │       │       ├── hapi.go         # HTTP API (HAPI层)</span><br><span class="line">│   │       │       ├── http_*.go       # HTTP实现 (HAPI层)</span><br><span class="line">│   │       │       ├── internal.go     # 内部逻辑 (Mod层)</span><br><span class="line">│   │       │       └── &#123;module&#125;.pb.go  # 协议 (自动生成)</span><br><span class="line">│   │       └── share/            # 共享数据结构</span><br><span class="line">│   │</span><br><span class="line">│   ├── infra/                    # 基础设施</span><br><span class="line">│   │   ├── redis/                # Redis封装</span><br><span class="line">│   │   ├── lock/                 # 分布式锁</span><br><span class="line">│   │   └── event-bus/            # 事件总线</span><br><span class="line">│   │</span><br><span class="line">│   └── common/                   # 公共工具</span><br><span class="line">│</span><br><span class="line">└── pkg/                          # 外部依赖本地化</span><br></pre></td></tr></table></figure>
+
+<h2 id="模块三层架构"><a href="#模块三层架构" class="headerlink" title="模块三层架构"></a>模块三层架构</h2><h3 id="架构图"><a href="#架构图" class="headerlink" title="架构图"></a>架构图</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">┌─────────────────────────────────────────────────────────────────────────┐</span><br><span class="line">│                          agent.Modules                                   │</span><br><span class="line">│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐                      │</span><br><span class="line">│  │ I&#123;Module&#125;   │  │  IPlayer    │  │   IPet      │  ...                 │</span><br><span class="line">│  │ (接口)      │  │  (接口)     │  │  (接口)     │                       │</span><br><span class="line">│  └─────────────┘  └─────────────┘  └─────────────┘                      │</span><br><span class="line">│         ▲                ▲                ▲                              │</span><br><span class="line">│         │                │                │                              │</span><br><span class="line">│  ┌──────┴──────┐  ┌──────┴──────┐  ┌──────┴──────┐                      │</span><br><span class="line">│  │&#123;Module&#125;Mod  │  │ PlayerMod   │  │   PetMod    │                      │</span><br><span class="line">│  │ (实现)      │  │  (实现)     │  │  (实现)     │                       │</span><br><span class="line">│  └─────────────┘  └─────────────┘  └─────────────┘                      │</span><br><span class="line">└─────────────────────────────────────────────────────────────────────────┘</span><br></pre></td></tr></table></figure>
+
+<h3 id="三层结构"><a href="#三层结构" class="headerlink" title="三层结构"></a>三层结构</h3><table>
+<thead>
+<tr>
+<th>层级</th>
+<th>结构体</th>
+<th>文件</th>
+<th>职责</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>API层</strong></td>
+<td><code>&#123;Module&#125;</code></td>
+<td><code>api.auto.go</code>, <code>api_*_req.go</code></td>
+<td>处理客户端请求，调用Mod层和其他模块</td>
+</tr>
+<tr>
+<td><strong>Mod层</strong></td>
+<td><code>&#123;Module&#125;Mod</code></td>
+<td><code>global.go</code>, <code>internal.go</code></td>
+<td>核心业务逻辑，可被其他模块调用</td>
+</tr>
+<tr>
+<td><strong>HAPI层</strong></td>
+<td><code>&#123;Module&#125;HAPI</code></td>
+<td><code>hapi.go</code>, <code>http_*.go</code></td>
+<td>处理跨服HTTP请求</td>
+</tr>
+</tbody></table>
+<h3 id="API层-api-auto-go"><a href="#API层-api-auto-go" class="headerlink" title="API层 (api.auto.go)"></a>API层 (api.auto.go)</h3><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 自动生成，不要修改</span></span><br><span class="line"><span class="keyword">type</span> &#123;Module&#125; <span class="keyword">struct</span> &#123;</span><br><span class="line">    ALL *agent.Modules    <span class="comment">// 所有模块接口 (调用其他模块)</span></span><br><span class="line">    mod *&#123;Module&#125;Mod      <span class="comment">// 同模块Mod引用 (调用内部方法)</span></span><br><span class="line">    db  *mdb.Database     <span class="comment">// 数据库</span></span><br><span class="line">    rpc *rpc.RPC          <span class="comment">// RPC</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(this *&#123;Module&#125;)</span></span> APIs() fastapi.APIs &#123;</span><br><span class="line">    <span class="keyword">return</span> fastapi.APIs&#123;</span><br><span class="line">        <span class="number">1</span>: &#123;InfoReq&#123;&#125;, InfoRsp&#123;&#125;&#125;,</span><br><span class="line">        <span class="number">2</span>: &#123;XxxReq&#123;&#125;, XxxRsp&#123;&#125;&#125;,</span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(this *&#123;Module&#125;)</span></span> Init(db *mdb.Database, mods *agent.Modules, rpc *rpc.RPC) &#123;</span><br><span class="line">    this.ALL = mods</span><br><span class="line">    this.db = db</span><br><span class="line">    this.rpc = rpc</span><br><span class="line">    this.mod = mods.&#123;Module&#125;.(*&#123;Module&#125;Mod)  <span class="comment">// 获取同模块Mod引用</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Mod层"><a href="#Mod层" class="headerlink" title="Mod层"></a>Mod层</h3><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">type</span> &#123;Module&#125;Mod <span class="keyword">struct</span> &#123;</span><br><span class="line">    ALL *agent.Modules    <span class="comment">// 所有模块接口</span></span><br><span class="line">    db  *mdb.Database</span><br><span class="line">    rpc *rpc.RPC</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(mod *&#123;Module&#125;Mod)</span></span> Init(db *mdb.Database, mods *agent.Modules, rpc *rpc.RPC) &#123;</span><br><span class="line">    mod.ALL = mods</span><br><span class="line">    mod.db = db</span><br><span class="line">    mod.rpc = rpc</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 导出方法 - 首字母大写，其他模块可调用</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(mod *&#123;Module&#125;Mod)</span></span> ExportMethod(pid <span class="type">int64</span>, param <span class="type">int32</span>) <span class="type">int64</span> &#123;</span><br><span class="line">    <span class="comment">// 可以调用同模块非导出方法</span></span><br><span class="line">    <span class="keyword">return</span> mod.internalMethod(pid, param)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 非导出方法 - 首字母小写，仅模块内部使用</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(mod *&#123;Module&#125;Mod)</span></span> internalMethod(pid <span class="type">int64</span>, param <span class="type">int32</span>) <span class="type">int64</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="HAPI层"><a href="#HAPI层" class="headerlink" title="HAPI层"></a>HAPI层</h3><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">type</span> &#123;Module&#125;HAPI <span class="keyword">struct</span> &#123;</span><br><span class="line">    db  *mdb.Database</span><br><span class="line">    ALL *agent.Modules</span><br><span class="line">    mod *&#123;Module&#125;Mod</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(api *&#123;Module&#125;HAPI)</span></span> Init(db *mdb.Database, mods *agent.Modules, _ *rpc.RPC) &#123;</span><br><span class="line">    api.db = db</span><br><span class="line">    api.ALL = mods</span><br><span class="line">    api.mod = mods.&#123;Module&#125;.(*&#123;Module&#125;Mod)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(api *&#123;Module&#125;HAPI)</span></span> HttpXxx(c context.Context, in *HttpXxxIn) (*HttpXxxOut, <span class="type">error</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> &amp;HttpXxxOut&#123;&#125;, <span class="literal">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="模块调用机制"><a href="#模块调用机制" class="headerlink" title="模块调用机制"></a>模块调用机制</h2><h3 id="调用其他模块的导出方法"><a href="#调用其他模块的导出方法" class="headerlink" title="调用其他模块的导出方法"></a>调用其他模块的导出方法</h3><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 在 API层</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(this *&#123;Module&#125;)</span></span> XxxReq(sess *link.Session, req *XxxReq) (*XxxRsp, <span class="type">error</span>) &#123;</span><br><span class="line">    <span class="comment">// 通过 ALL.模块名.方法名 调用</span></span><br><span class="line">    open := this.ALL.Player.CheckFuncOpen(pid, funcSign)</span><br><span class="line">    info := this.ALL.Pet.GetPetInfo(pid, petId)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> &amp;XxxRsp&#123;&#125;, <span class="literal">nil</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 在 Mod层</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(mod *&#123;Module&#125;Mod)</span></span> ExportMethod(ctx context.Context, pid <span class="type">int64</span>) <span class="type">error</span> &#123;</span><br><span class="line">    <span class="comment">// 同样通过 ALL.模块名.方法名 调用</span></span><br><span class="line">    mod.ALL.Player.CheckFuncOpen(pid, funcSign)</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="调用同模块方法"><a href="#调用同模块方法" class="headerlink" title="调用同模块方法"></a>调用同模块方法</h3><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 在 API层</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(this *&#123;Module&#125;)</span></span> XxxReq(sess *link.Session, req *XxxReq) (*XxxRsp, <span class="type">error</span>) &#123;</span><br><span class="line">    <span class="comment">// 调用同文件的非导出方法</span></span><br><span class="line">    this.helperMethod(row)</span><br><span class="line">    this.initData(pdb)</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 通过 mod 调用 Mod层方法</span></span><br><span class="line">    this.mod.ExportMethod(pid, param)      <span class="comment">// 导出方法</span></span><br><span class="line">    this.mod.internalMethod(pid, param)    <span class="comment">// 非导出方法</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> &amp;XxxRsp&#123;&#125;, <span class="literal">nil</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 在 Mod层</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(mod *&#123;Module&#125;Mod)</span></span> ExportMethod(pid <span class="type">int64</span>, param <span class="type">int32</span>) <span class="type">int64</span> &#123;</span><br><span class="line">    <span class="comment">// 直接调用同模块方法</span></span><br><span class="line">    <span class="keyword">return</span> mod.internalMethod(pid, param)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="调用方式总结"><a href="#调用方式总结" class="headerlink" title="调用方式总结"></a>调用方式总结</h3><table>
+<thead>
+<tr>
+<th>调用场景</th>
+<th>方式</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>调用其他模块导出方法</td>
+<td><code>this.ALL.模块名.方法()</code></td>
+<td><code>this.ALL.Player.CheckFuncOpen()</code></td>
+</tr>
+<tr>
+<td>调用同模块导出方法</td>
+<td><code>this.mod.方法()</code></td>
+<td><code>this.mod.ExportMethod()</code></td>
+</tr>
+<tr>
+<td>调用同模块非导出方法</td>
+<td><code>this.mod.方法()</code></td>
+<td><code>this.mod.internalMethod()</code></td>
+</tr>
+<tr>
+<td>调用同文件方法</td>
+<td>直接调用</td>
+<td><code>this.helperMethod()</code></td>
+</tr>
+</tbody></table>
+<h2 id="导出方法-vs-非导出方法"><a href="#导出方法-vs-非导出方法" class="headerlink" title="导出方法 vs 非导出方法"></a>导出方法 vs 非导出方法</h2><h3 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h3><table>
+<thead>
+<tr>
+<th>类型</th>
+<th>命名</th>
+<th>作用</th>
+<th>agent扫描</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>导出方法</strong></td>
+<td><code>func (mod *&#123;Module&#125;Mod) ExportMethod(...)</code></td>
+<td>其他模块可调用</td>
+<td>✅ 生成接口</td>
+</tr>
+<tr>
+<td><strong>非导出方法</strong></td>
+<td><code>func (mod *&#123;Module&#125;Mod) internalMethod(...)</code></td>
+<td>仅模块内部使用</td>
+<td>❌ 不生成</td>
+</tr>
+</tbody></table>
+<h3 id="agent接口生成"><a href="#agent接口生成" class="headerlink" title="agent接口生成"></a>agent接口生成</h3><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="comment">// agent/agent.go - make agent 自动生成</span></span><br><span class="line"><span class="keyword">type</span> I&#123;Module&#125; <span class="keyword">interface</span> &#123;</span><br><span class="line">    <span class="comment">// 只包含导出方法 (首字母大写)</span></span><br><span class="line">    ExportMethod(pid <span class="type">int64</span>, param <span class="type">int32</span>) <span class="type">int64</span></span><br><span class="line">    TransStart(ctx context.Context)</span><br><span class="line">    AnotherExportMethod(ctx context.Context, pid <span class="type">int64</span>) <span class="type">error</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 非导出方法不会出现在这里</span></span><br><span class="line">    <span class="comment">// internalMethod(...) ❌</span></span><br><span class="line">    <span class="comment">// helperMethod(...) ❌</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="何时使用导出-x2F-非导出"><a href="#何时使用导出-x2F-非导出" class="headerlink" title="何时使用导出&#x2F;非导出"></a>何时使用导出&#x2F;非导出</h3><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="comment">// ✅ 导出方法 - 需要被其他模块调用</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(mod *&#123;Module&#125;Mod)</span></span> GetData(pid <span class="type">int64</span>) *Data &#123;</span><br><span class="line">    <span class="keyword">return</span> mod.getDataFromDB(pid)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ✅ 非导出方法 - 仅模块内部使用</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(mod *&#123;Module&#125;Mod)</span></span> getDataFromDB(pid <span class="type">int64</span>) *Data &#123;</span><br><span class="line">    <span class="comment">// 内部实现细节</span></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ✅ 非导出方法 - 辅助函数</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(mod *&#123;Module&#125;Mod)</span></span> validateParam(param <span class="type">int32</span>) <span class="type">bool</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> param &gt; <span class="number">0</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="开发流程"><a href="#开发流程" class="headerlink" title="开发流程"></a>开发流程</h2><h3 id="1-代码生成命令"><a href="#1-代码生成命令" class="headerlink" title="1. 代码生成命令"></a>1. 代码生成命令</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 完整生成流程</span></span><br><span class="line">make code</span><br><span class="line"></span><br><span class="line"><span class="comment"># 分步执行</span></span><br><span class="line">make configs_gen   <span class="comment"># CSV配置 → Go/C# 代码</span></span><br><span class="line">make mdb           <span class="comment"># 数据库迁移 + mdb代码生成</span></span><br><span class="line">make proto_gen     <span class="comment"># .proto → Go/C# 协议代码</span></span><br><span class="line">make agent         <span class="comment"># 扫描 *Mod 导出方法 → 生成接口</span></span><br><span class="line">make fastapi       <span class="comment"># 扫描模块 → API路由</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 编译</span></span><br><span class="line">make build         <span class="comment"># 编译所有服务</span></span><br><span class="line">make gameserver    <span class="comment"># 编译游戏服务器</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 测试</span></span><br><span class="line">make <span class="built_in">test</span>          <span class="comment"># 运行单元测试</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-新增模块流程"><a href="#2-新增模块流程" class="headerlink" title="2. 新增模块流程"></a>2. 新增模块流程</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 1. 创建 Proto 协议文件</span></span><br><span class="line"><span class="comment"># api/&#123;module&#125;.proto</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. 创建数据库迁移脚本</span></span><br><span class="line"><span class="comment"># database/gameserver/changes/player_&#123;table&#125;/0.0.01.001.php</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 3. 生成代码</span></span><br><span class="line">make mdb &amp;&amp; make proto_gen &amp;&amp; make agent &amp;&amp; make fastapi</span><br><span class="line"></span><br><span class="line"><span class="comment"># 4. 更新 mock/apis.go 添加新模块引用</span></span><br><span class="line"><span class="comment"># 参考: 下方&quot;mock/apis.go 更新说明&quot;章节</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 5. 实现业务逻辑并测试</span></span><br><span class="line">make <span class="built_in">test</span> &amp;&amp; make build</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-新增导出方法流程"><a href="#3-新增导出方法流程" class="headerlink" title="3. 新增导出方法流程"></a>3. 新增导出方法流程</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 1. 在 global.go 或 internal.go 添加导出方法</span></span><br><span class="line">func (mod *&#123;Module&#125;Mod) NewExportMethod(pid int64) error &#123;</span><br><span class="line">    <span class="built_in">return</span> nil</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. 重新生成 agent 接口</span></span><br><span class="line">make agent</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3. 其他模块即可调用</span></span><br><span class="line">this.ALL.&#123;Module&#125;.NewExportMethod(pid)</span><br></pre></td></tr></table></figure>
+
+<h2 id="Proto-协议规范"><a href="#Proto-协议规范" class="headerlink" title="Proto 协议规范"></a>Proto 协议规范</h2><h3 id="文件模板"><a href="#文件模板" class="headerlink" title="文件模板"></a>文件模板</h3><figure class="highlight protobuf"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 模块说明</span></span><br><span class="line">syntax = <span class="string">&quot;proto3&quot;</span>;</span><br><span class="line"><span class="keyword">package</span> &#123;module&#125;;</span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;errors.proto&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;share.proto&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">option</span> go_package = <span class="string">&quot;lite-ulala/internal/gameserver/module/modules/&#123;module&#125;;&#123;module&#125;&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 枚举</span></span><br><span class="line"><span class="keyword">enum </span><span class="title class_">SomeType</span> &#123;</span><br><span class="line">  TypeA = <span class="number">0</span>;</span><br><span class="line">  TypeB = <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 请求消息</span></span><br><span class="line"><span class="keyword">message </span><span class="title class_">XxxReq</span> &#123;</span><br><span class="line">  <span class="type">int64</span> field1 = <span class="number">1</span>;</span><br><span class="line">  <span class="type">string</span> field2 = <span class="number">2</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 响应消息</span></span><br><span class="line"><span class="keyword">message </span><span class="title class_">XxxRsp</span> &#123;</span><br><span class="line">  errors.Code code = <span class="number">1</span>;  <span class="comment">// 必填</span></span><br><span class="line">  share.SomeData data = <span class="number">2</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 通知消息</span></span><br><span class="line"><span class="keyword">message </span><span class="title class_">NotifyXxx</span> &#123;</span><br><span class="line">  errors.Code code = <span class="number">1</span>;</span><br><span class="line">  <span class="keyword">repeated</span> share.Item items = <span class="number">2</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// HTTP跨服请求</span></span><br><span class="line"><span class="keyword">message </span><span class="title class_">HttpXxxIn</span> &#123;</span><br><span class="line">  <span class="type">int64</span> pid = <span class="number">1</span>;</span><br><span class="line">  XxxReq req = <span class="number">2</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">message </span><span class="title class_">HttpXxxOut</span> &#123;</span><br><span class="line">  errors.Code code = <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="命名规范"><a href="#命名规范" class="headerlink" title="命名规范"></a>命名规范</h3><table>
+<thead>
+<tr>
+<th>类型</th>
+<th>格式</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>请求</td>
+<td><code>XxxReq</code></td>
+<td>客户端 → 服务器</td>
+</tr>
+<tr>
+<td>响应</td>
+<td><code>XxxRsp</code></td>
+<td>服务器 → 客户端</td>
+</tr>
+<tr>
+<td>通知</td>
+<td><code>NotifyXxx</code></td>
+<td>服务器推送</td>
+</tr>
+<tr>
+<td>HTTP请求</td>
+<td><code>HttpXxxIn</code></td>
+<td>跨服调用入参</td>
+</tr>
+<tr>
+<td>HTTP响应</td>
+<td><code>HttpXxxOut</code></td>
+<td>跨服调用返回</td>
+</tr>
+</tbody></table>
+<h2 id="模块开发规范"><a href="#模块开发规范" class="headerlink" title="模块开发规范"></a>模块开发规范</h2><h3 id="global-go-模块定义"><a href="#global-go-模块定义" class="headerlink" title="global.go - 模块定义"></a>global.go - 模块定义</h3><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> &#123;module&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">    <span class="string">&quot;lite-ulala/internal/gameserver/mdb&quot;</span></span><br><span class="line">    <span class="string">&quot;lite-ulala/internal/gameserver/module/agent&quot;</span></span><br><span class="line">    <span class="string">&quot;lite-ulala/internal/gameserver/service&quot;</span></span><br><span class="line">    <span class="string">&quot;lite-ulala/internal/gameserver/service/presentation/rpc&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Info</span><span class="params">()</span></span> service.Module &#123;</span><br><span class="line">    <span class="keyword">return</span> service.Module&#123;</span><br><span class="line">        API:  &amp;&#123;Module&#125;&#123;&#125;,      <span class="comment">// API层</span></span><br><span class="line">        MOD:  &amp;&#123;Module&#125;Mod&#123;&#125;,   <span class="comment">// 业务层</span></span><br><span class="line">        HAPI: &amp;&#123;Module&#125;HAPI&#123;&#125;,  <span class="comment">// HTTP API层</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> &#123;Module&#125;Mod <span class="keyword">struct</span> &#123;</span><br><span class="line">    ALL *agent.Modules</span><br><span class="line">    db  *mdb.Database</span><br><span class="line">    rpc *rpc.RPC</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(mod *&#123;Module&#125;Mod)</span></span> Init(db *mdb.Database, mods *agent.Modules, rpc *rpc.RPC) &#123;</span><br><span class="line">    mod.ALL = mods</span><br><span class="line">    mod.db = db</span><br><span class="line">    mod.rpc = rpc</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(mod *&#123;Module&#125;Mod)</span></span> Start() &#123;</span><br><span class="line">    <span class="comment">// 模块启动逻辑</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 导出方法 - 其他模块可调用</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(mod *&#123;Module&#125;Mod)</span></span> ExportMethod(ctx context.Context, param <span class="type">int64</span>) <span class="type">error</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 非导出方法 - 仅模块内部使用</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(mod *&#123;Module&#125;Mod)</span></span> internalMethod(ctx context.Context, param <span class="type">int64</span>) <span class="type">error</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="api-req-go-API实现"><a href="#api-req-go-API实现" class="headerlink" title="api_*_req.go - API实现"></a>api_*_req.go - API实现</h3><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> &#123;module&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">    <span class="string">&quot;git.sofunny.io/libs/link&quot;</span></span><br><span class="line">    <span class="string">&quot;lite-ulala/internal/gameserver/module/errors&quot;</span></span><br><span class="line">    <span class="string">&quot;lite-ulala/internal/gameserver/service/presentation/fastapi/state&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment">// API请求处理 - 使用 this 接收者</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(this *&#123;Module&#125;)</span></span> XxxReq(sess *link.Session, req *XxxReq) (*XxxRsp, <span class="type">error</span>) &#123;</span><br><span class="line">    s := state.State(sess)</span><br><span class="line">    pdb := this.db.GetPlayerDB(s.PlayerId)</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 1. 调用其他模块</span></span><br><span class="line">    <span class="keyword">if</span> !this.ALL.Player.CheckFuncOpen(s.PlayerId, funcSign) &#123;</span><br><span class="line">        <span class="keyword">return</span> &amp;XxxRsp&#123;Code: errors.Code_FUNCTION_IS_NOT_OPEN&#125;, <span class="literal">nil</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 2. 调用同模块方法</span></span><br><span class="line">    result := this.mod.ExportMethod(s.Ctx, req.Field1)</span><br><span class="line">    this.mod.internalMethod(s.Ctx, req.Field1)</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 3. 同文件辅助方法</span></span><br><span class="line">    this.validateParam(req.Field1)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> &amp;XxxRsp&#123;Code: errors.Code_SUCCESS&#125;, <span class="literal">nil</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 同文件辅助方法</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(this *&#123;Module&#125;)</span></span> validateParam(param <span class="type">int64</span>) <span class="type">bool</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> param &gt; <span class="number">0</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="hapi-go-HTTP-API-跨服"><a href="#hapi-go-HTTP-API-跨服" class="headerlink" title="hapi.go - HTTP API (跨服)"></a>hapi.go - HTTP API (跨服)</h3><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> &#123;module&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">    <span class="string">&quot;context&quot;</span></span><br><span class="line">    <span class="string">&quot;lite-ulala/internal/gameserver/mdb&quot;</span></span><br><span class="line">    <span class="string">&quot;lite-ulala/internal/gameserver/module/agent&quot;</span></span><br><span class="line">    <span class="string">&quot;lite-ulala/internal/gameserver/service/presentation/rpc&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> &#123;Module&#125;HAPI <span class="keyword">struct</span> &#123;</span><br><span class="line">    db  *mdb.Database</span><br><span class="line">    ALL *agent.Modules</span><br><span class="line">    mod *&#123;Module&#125;Mod</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(api *&#123;Module&#125;HAPI)</span></span> Init(db *mdb.Database, mods *agent.Modules, _ *rpc.RPC) &#123;</span><br><span class="line">    api.db = db</span><br><span class="line">    api.ALL = mods</span><br><span class="line">    api.mod = mods.&#123;Module&#125;.(*&#123;Module&#125;Mod)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 跨服API</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(api *&#123;Module&#125;HAPI)</span></span> HttpXxx(ctx context.Context, req *HttpXxxIn) (*HttpXxxOut, <span class="type">error</span>) &#123;</span><br><span class="line">    err := api.mod.ExportMethod(ctx, req.Pid)</span><br><span class="line">    <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> &amp;HttpXxxOut&#123;Code: errors.Code_SERVER_ERROR&#125;, <span class="literal">nil</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> &amp;HttpXxxOut&#123;Code: errors.Code_SUCCESS&#125;, <span class="literal">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="跨服调用"><a href="#跨服调用" class="headerlink" title="跨服调用"></a>跨服调用</h3><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 调用其他服务器的HTTP API</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(mod *&#123;Module&#125;Mod)</span></span> callOtherServer(ctx context.Context, pid <span class="type">int64</span>, sid <span class="type">uint32</span>) &#123;</span><br><span class="line">    req := &amp;HttpXxxIn&#123;Pid: pid&#125;</span><br><span class="line">    rsp := &amp;httpapi.Response&#123;&#125;</span><br><span class="line">    </span><br><span class="line">    mod.ALL.System.CommonApiPost(ctx, <span class="string">&quot;&#123;module&#125;/HttpXxx&quot;</span>, sid, req, rsp, </span><br><span class="line">        <span class="function"><span class="keyword">func</span><span class="params">(ctx context.Context, err <span class="type">error</span>, rsp *httpapi.Response)</span></span> &#123;</span><br><span class="line">            <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">                <span class="keyword">return</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;,</span><br><span class="line">    )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="测试规范"><a href="#测试规范" class="headerlink" title="测试规范"></a>测试规范</h2><h3 id="测试文件模板"><a href="#测试文件模板" class="headerlink" title="测试文件模板"></a>测试文件模板</h3><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> &#123;module&#125;_test</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">    <span class="string">&quot;testing&quot;</span></span><br><span class="line">    <span class="string">&quot;lite-ulala/internal/gameserver/mdb&quot;</span></span><br><span class="line">    <span class="string">&quot;lite-ulala/internal/gameserver/module/modules/&#123;module&#125;&quot;</span></span><br><span class="line">    <span class="string">&quot;lite-ulala/internal/gameserver/test/mock&quot;</span></span><br><span class="line">    <span class="string">&quot;github.com/stretchr/testify/assert&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">TestXxxReq</span><span class="params">(t *testing.T)</span></span> &#123;</span><br><span class="line">    u := mock.User(t)</span><br><span class="line">    this := u.Apis</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 准备数据</span></span><br><span class="line">    u.DB.InsertGlobal&#123;Module&#125;(&amp;mdb.Global&#123;Module&#125;&#123;Name: <span class="string">&quot;Test&quot;</span>&#125;)</span><br><span class="line">    u.Pdb.InsertPlayer&#123;Module&#125;(&amp;mdb.Player&#123;Module&#125;&#123;&#125;)</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 调用API</span></span><br><span class="line">    rsp, err := this.&#123;Module&#125;.XxxReq(u.Session, &amp;&#123;module&#125;.XxxReq&#123;Field1: <span class="number">1</span>&#125;)</span><br><span class="line">    </span><br><span class="line">    assert.NotNil(t, rsp)</span><br><span class="line">    assert.NoError(t, err)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 测试导出方法</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">TestExportMethod</span><span class="params">(t *testing.T)</span></span> &#123;</span><br><span class="line">    u := mock.User(t)</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 通过 agent 调用导出方法</span></span><br><span class="line">    result := u.Apis.&#123;Module&#125;.ExportMethod(u.Ctx, <span class="number">123</span>)</span><br><span class="line">    assert.NotNil(t, result)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Mock-工具"><a href="#Mock-工具" class="headerlink" title="Mock 工具"></a>Mock 工具</h3><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">type</span> UserInfo <span class="keyword">struct</span> &#123;</span><br><span class="line">    Apis    *TestApis           <span class="comment">// 所有API (通过 agent 调用)</span></span><br><span class="line">    DB      *mdb.Database       <span class="comment">// 全局数据库</span></span><br><span class="line">    Pdb     *mdb.PlayerDB       <span class="comment">// 玩家数据库</span></span><br><span class="line">    Session *link.Session       <span class="comment">// 会话</span></span><br><span class="line">    Ctx     context.Context     <span class="comment">// 上下文</span></span><br><span class="line">    Pid     <span class="type">int64</span>               <span class="comment">// 玩家ID</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 数据库操作</span></span><br><span class="line">u.DB.InsertGlobal&#123;Module&#125;(&amp;mdb.Global&#123;Module&#125;&#123;...&#125;)</span><br><span class="line">u.DB.LookupGlobal&#123;Module&#125;(id)</span><br><span class="line">u.Pdb.InsertPlayer&#123;Module&#125;(&amp;mdb.Player&#123;Module&#125;&#123;...&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// Redis操作</span></span><br><span class="line">this.&#123;Module&#125;.ALL.Redis.ZAdd(u.Ctx, key, <span class="literal">nil</span>, &amp;redis.Z&#123;...&#125;)</span><br></pre></td></tr></table></figure>
+
+<h2 id="数据库规范"><a href="#数据库规范" class="headerlink" title="数据库规范"></a>数据库规范</h2><h3 id="目录结构-1"><a href="#目录结构-1" class="headerlink" title="目录结构"></a>目录结构</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">database/</span><br><span class="line">├── framework/                    # 数据库迁移框架 (PHP)</span><br><span class="line">│   ├── main.php                  # 入口脚本</span><br><span class="line">│   └── plugins/go_mdb/           # Go代码生成插件</span><br><span class="line">│</span><br><span class="line">└── gameserver/                   # 游戏数据库配置</span><br><span class="line">    ├── config.php                # 数据库连接配置</span><br><span class="line">    ├── mdb_index.php             # 索引定义</span><br><span class="line">    └── changes/                  # 迁移脚本</span><br><span class="line">        ├── global_&#123;table&#125;/       # 全局表迁移</span><br><span class="line">        │   ├── 0.0.01.001.php    # 初始版本</span><br><span class="line">        │   └── 0.0.01.008.php    # 后续版本</span><br><span class="line">        └── player_&#123;table&#125;/       # 玩家表迁移</span><br><span class="line">            └── 0.0.02.001.php</span><br></pre></td></tr></table></figure>
+
+<h3 id="表类型"><a href="#表类型" class="headerlink" title="表类型"></a>表类型</h3><table>
+<thead>
+<tr>
+<th>类型</th>
+<th>前缀</th>
+<th>用途</th>
+<th>操作对象</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>全局表</strong></td>
+<td><code>global_</code></td>
+<td>跨玩家共享数据</td>
+<td><code>db *Database</code></td>
+</tr>
+<tr>
+<td><strong>玩家表</strong></td>
+<td><code>player_</code></td>
+<td>单玩家私有数据</td>
+<td><code>pdb *PlayerDB</code></td>
+</tr>
+</tbody></table>
+<h3 id="玩家表类型"><a href="#玩家表类型" class="headerlink" title="玩家表类型"></a>玩家表类型</h3><table>
+<thead>
+<tr>
+<th>类型</th>
+<th>字段</th>
+<th>特点</th>
+<th>查询方法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>单条表</strong></td>
+<td>只有 <code>pid</code></td>
+<td>每个玩家只有一条数据</td>
+<td><code>LookupPlayer&#123;Table&#125;()</code> 无参数</td>
+</tr>
+<tr>
+<td><strong>多条表</strong></td>
+<td>有 <code>id</code> + <code>pid</code></td>
+<td>每个玩家可以有多条数据</td>
+<td><code>LookupPlayer&#123;Table&#125;(id)</code> 有参数</td>
+</tr>
+</tbody></table>
+<h3 id="表结构定义"><a href="#表结构定义" class="headerlink" title="表结构定义"></a>表结构定义</h3><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="comment">// ==================== 全局表 ====================</span></span><br><span class="line"><span class="comment">// 跨玩家共享数据 (操作: db *Database)</span></span><br><span class="line"><span class="comment">// 命名: Global&#123;Table&#125; (大驼峰)</span></span><br><span class="line"><span class="keyword">type</span> Global&#123;Table&#125; <span class="keyword">struct</span> &#123;</span><br><span class="line">    Id          <span class="type">int64</span>  <span class="string">`json:&quot;id&quot;`</span>           <span class="comment">// 记录ID (自增)</span></span><br><span class="line">    Name        <span class="type">string</span> <span class="string">`json:&quot;name&quot;`</span>         <span class="comment">// 名称</span></span><br><span class="line">    <span class="comment">// ... 其他字段</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ==================== 玩家表 - 单条表 ====================</span></span><br><span class="line"><span class="comment">// 每个玩家只有一条数据，主键是pid (操作: pdb *PlayerDB)</span></span><br><span class="line"><span class="comment">// 命名: Player&#123;Table&#125; (大驼峰)</span></span><br><span class="line"><span class="comment">// 特点: 无Id字段，只有Pid</span></span><br><span class="line"><span class="keyword">type</span> Player&#123;Table&#125; <span class="keyword">struct</span> &#123;</span><br><span class="line">    Pid         <span class="type">int64</span>  <span class="string">`json:&quot;pid&quot;`</span>          <span class="comment">// 玩家ID (主键，自动填充)</span></span><br><span class="line">    Field1      <span class="type">int16</span>  <span class="string">`json:&quot;field1&quot;`</span>       <span class="comment">// 字段1</span></span><br><span class="line">    Field2      <span class="type">int32</span>  <span class="string">`json:&quot;field2&quot;`</span>       <span class="comment">// 字段2</span></span><br><span class="line">    <span class="comment">// ... 其他字段 (无Id)</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ==================== 玩家表 - 多条表 ====================</span></span><br><span class="line"><span class="comment">// 每个玩家可以有多条数据，主键是id (操作: pdb *PlayerDB)</span></span><br><span class="line"><span class="comment">// 命名: Player&#123;Table&#125; (大驼峰)</span></span><br><span class="line"><span class="comment">// 特点: 有Id和Pid字段</span></span><br><span class="line"><span class="keyword">type</span> Player&#123;Table&#125; <span class="keyword">struct</span> &#123;</span><br><span class="line">    Id          <span class="type">int64</span>  <span class="string">`json:&quot;id&quot;`</span>           <span class="comment">// 记录ID (自增)</span></span><br><span class="line">    Pid         <span class="type">int64</span>  <span class="string">`json:&quot;pid&quot;`</span>          <span class="comment">// 玩家ID (自动填充)</span></span><br><span class="line">    Field1      <span class="type">int64</span>  <span class="string">`json:&quot;field1&quot;`</span>       <span class="comment">// 字段1</span></span><br><span class="line">    Field2      <span class="type">int32</span>  <span class="string">`json:&quot;field2&quot;`</span>       <span class="comment">// 字段2</span></span><br><span class="line">    <span class="comment">// ... 其他字段</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="迁移脚本规范"><a href="#迁移脚本规范" class="headerlink" title="迁移脚本规范"></a>迁移脚本规范</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="comment">// database/gameserver/changes/global_&#123;table&#125;/0.0.01.001.php</span></span><br><span class="line"></span><br><span class="line"><span class="variable language_">$this</span>-&gt;db-&gt;<span class="title function_ invoke__">Execute</span>(<span class="string">&quot;</span></span><br><span class="line"><span class="string">DROP TABLE IF EXISTS `global_&#123;table&#125;`;</span></span><br><span class="line"><span class="string">CREATE TABLE `global_&#123;table&#125;` (</span></span><br><span class="line"><span class="string">  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT &#x27;记录ID&#x27;,</span></span><br><span class="line"><span class="string">  `name` varchar(64) NOT NULL DEFAULT &#x27;&#x27; COMMENT &#x27;名称&#x27;,</span></span><br><span class="line"><span class="string">  `level` smallint(6) NOT NULL DEFAULT &#x27;1&#x27; COMMENT &#x27;等级&#x27;,</span></span><br><span class="line"><span class="string">  PRIMARY KEY (`id`)</span></span><br><span class="line"><span class="string">) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT=&#x27;全局表&#x27;</span></span><br><span class="line"><span class="string">&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<h3 id="索引定义-mdb-index-php"><a href="#索引定义-mdb-index-php" class="headerlink" title="索引定义 (mdb_index.php)"></a>索引定义 (mdb_index.php)</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="comment">// database/gameserver/mdb_index.php</span></span><br><span class="line"><span class="keyword">return</span> [</span><br><span class="line">    <span class="comment">// 单条索引 - 返回单条记录</span></span><br><span class="line">    <span class="string">&#x27;global_&#123;table&#125;&#x27;</span> =&gt; [</span><br><span class="line">        <span class="string">&#x27;index by field&#x27;</span>,                    <span class="comment">// LookupGlobal&#123;Table&#125;ByField(field) → *Global&#123;Table&#125;</span></span><br><span class="line">    ],</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 多条索引 - 返回多条记录</span></span><br><span class="line">    <span class="string">&#x27;global_&#123;table&#125;&#x27;</span> =&gt; [</span><br><span class="line">        <span class="string">&#x27;index many by field&#x27;</span>,               <span class="comment">// SelectGlobal&#123;Table&#125;ByField(field, callback)</span></span><br><span class="line">    ],</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 复合索引 - 多字段联合查询</span></span><br><span class="line">    <span class="string">&#x27;global_&#123;table&#125;&#x27;</span> =&gt; [</span><br><span class="line">        <span class="string">&#x27;index by field1,field2&#x27;</span>,            <span class="comment">// LookupGlobal&#123;Table&#125;ByField1AndField2(f1, f2)</span></span><br><span class="line">        <span class="string">&#x27;index many by field1,field2&#x27;</span>,       <span class="comment">// SelectGlobal&#123;Table&#125;ByField1AndField2(f1, f2, callback)</span></span><br><span class="line">    ],</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 玩家表索引</span></span><br><span class="line">    <span class="string">&#x27;player_&#123;table&#125;&#x27;</span> =&gt; [</span><br><span class="line">        <span class="string">&#x27;index by item_id&#x27;</span>,                  <span class="comment">// LookupPlayer&#123;Table&#125;ByItemId(itemId)</span></span><br><span class="line">    ],</span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+<h3 id="索引类型说明"><a href="#索引类型说明" class="headerlink" title="索引类型说明"></a>索引类型说明</h3><table>
+<thead>
+<tr>
+<th>索引类型</th>
+<th>语法</th>
+<th>生成方法</th>
+<th>返回值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>单条索引</td>
+<td><code>index by field</code></td>
+<td><code>LookupXxxByField(field)</code></td>
+<td><code>*Xxx</code></td>
+</tr>
+<tr>
+<td>多条索引</td>
+<td><code>index many by field</code></td>
+<td><code>SelectXxxByField(field, callback)</code></td>
+<td>遍历</td>
+</tr>
+<tr>
+<td>复合索引</td>
+<td><code>index by f1,f2</code></td>
+<td><code>LookupXxxByF1AndF2(f1, f2)</code></td>
+<td><code>*Xxx</code></td>
+</tr>
+<tr>
+<td>复合多条</td>
+<td><code>index many by f1,f2</code></td>
+<td><code>SelectXxxByF1AndF2(f1, f2, callback)</code></td>
+<td>遍历</td>
+</tr>
+</tbody></table>
+<h3 id="基础CRUD操作"><a href="#基础CRUD操作" class="headerlink" title="基础CRUD操作"></a>基础CRUD操作</h3><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="comment">// ==================== 全局表操作 (db *Database) ====================</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 插入 - 自动生成ID</span></span><br><span class="line">data := &amp;mdb.Global&#123;Table&#125;&#123;</span><br><span class="line">    Name:  <span class="string">&quot;Test&quot;</span>,</span><br><span class="line">    Level: <span class="number">1</span>,</span><br><span class="line">&#125;</span><br><span class="line">db.InsertGlobal&#123;Table&#125;(data)</span><br><span class="line"><span class="comment">// data.Id 自动填充</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 查询 - 按主键查询</span></span><br><span class="line">data := db.LookupGlobal&#123;Table&#125;(id)</span><br><span class="line"><span class="keyword">if</span> data == <span class="literal">nil</span> &#123;</span><br><span class="line">    <span class="comment">// 不存在</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 更新</span></span><br><span class="line">data.Level = <span class="number">2</span></span><br><span class="line">db.UpdateGlobal&#123;Table&#125;(data)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 删除</span></span><br><span class="line">db.DeleteGlobal&#123;Table&#125;(data)</span><br><span class="line"></span><br><span class="line"><span class="comment">// ==================== 玩家表 - 单条表操作 (pdb *PlayerDB) ====================</span></span><br><span class="line"><span class="comment">// 特点: 无Id字段，只有Pid，每个玩家只有一条数据</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 插入 - 自动填充Pid</span></span><br><span class="line">data := &amp;mdb.Player&#123;Table&#125;&#123;</span><br><span class="line">    Field1: <span class="number">1</span>,</span><br><span class="line">    Field2: <span class="number">100</span>,</span><br><span class="line">&#125;</span><br><span class="line">pdb.InsertPlayer&#123;Table&#125;(data)</span><br><span class="line"><span class="comment">// data.Pid 自动填充</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 查询 - 无参数，直接返回该玩家的数据</span></span><br><span class="line">data := pdb.LookupPlayer&#123;Table&#125;()</span><br><span class="line"><span class="keyword">if</span> data == <span class="literal">nil</span> &#123;</span><br><span class="line">    <span class="comment">// 不存在，需要先插入</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 更新</span></span><br><span class="line">data.Field1 = <span class="number">2</span></span><br><span class="line">data.Field2 += <span class="number">100</span></span><br><span class="line">pdb.UpdatePlayer&#123;Table&#125;(data)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 删除</span></span><br><span class="line">pdb.DeletePlayer&#123;Table&#125;(data)</span><br><span class="line"></span><br><span class="line"><span class="comment">// ==================== 玩家表 - 多条表操作 (pdb *PlayerDB) ====================</span></span><br><span class="line"><span class="comment">// 特点: 有Id和Pid字段，每个玩家可以有多条数据</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 插入 - 自动生成ID，自动填充Pid</span></span><br><span class="line">data := &amp;mdb.Player&#123;Table&#125;&#123;</span><br><span class="line">    Field1: <span class="number">10001</span>,</span><br><span class="line">    Field2: <span class="number">1</span>,</span><br><span class="line">&#125;</span><br><span class="line">pdb.InsertPlayer&#123;Table&#125;(data)</span><br><span class="line"><span class="comment">// data.Id 自动填充, data.Pid 自动填充</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 查询 - 按主键Id查询</span></span><br><span class="line">data := pdb.LookupPlayer&#123;Table&#125;(id)</span><br><span class="line"><span class="keyword">if</span> data == <span class="literal">nil</span> &#123;</span><br><span class="line">    <span class="comment">// 不存在</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 更新</span></span><br><span class="line">data.Field1 = <span class="number">2</span></span><br><span class="line">data.Field2 = <span class="number">3</span></span><br><span class="line">pdb.UpdatePlayer&#123;Table&#125;(data)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 删除</span></span><br><span class="line">pdb.DeletePlayer&#123;Table&#125;(data)</span><br></pre></td></tr></table></figure>
+
+<h3 id="索引查询操作"><a href="#索引查询操作" class="headerlink" title="索引查询操作"></a>索引查询操作</h3><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="comment">// ==================== 全局表索引查询 ====================</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 单条索引查询 (index by field)</span></span><br><span class="line">data := db.LookupGlobal&#123;Table&#125;ByField(fieldValue)</span><br><span class="line"><span class="keyword">if</span> data == <span class="literal">nil</span> &#123;</span><br><span class="line">    <span class="comment">// 不存在</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 多条索引查询 (index many by field)</span></span><br><span class="line">db.SelectGlobal&#123;Table&#125;ByField(fieldValue, <span class="function"><span class="keyword">func</span><span class="params">(row *mdb.Global&#123;Table&#125;Row)</span></span> &#123;</span><br><span class="line">    data := row.Get()</span><br><span class="line">    <span class="comment">// 处理每条数据</span></span><br><span class="line">    <span class="comment">// row.Break() // 可选：跳出循环</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 复合索引查询 (index by field1,field2)</span></span><br><span class="line">data := db.LookupGlobal&#123;Table&#125;ByField1AndField2(f1, f2)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 复合多条索引查询 (index many by field1,field2)</span></span><br><span class="line">db.SelectGlobal&#123;Table&#125;ByField1AndField2(f1, f2, <span class="function"><span class="keyword">func</span><span class="params">(row *mdb.Global&#123;Table&#125;Row)</span></span> &#123;</span><br><span class="line">    data := row.Get()</span><br><span class="line">    <span class="comment">// 处理</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// ==================== 玩家表 - 单条表索引查询 ====================</span></span><br><span class="line"><span class="comment">// 特点: 主键查询无参数，索引查询有参数</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 主键查询 (无参数)</span></span><br><span class="line">data := pdb.LookupPlayer&#123;Table&#125;()</span><br><span class="line"><span class="keyword">if</span> data == <span class="literal">nil</span> &#123;</span><br><span class="line">    <span class="comment">// 不存在</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 单条索引查询 (index by field) - 有参数</span></span><br><span class="line">data := pdb.LookupPlayer&#123;Table&#125;ByField(fieldValue)</span><br><span class="line"><span class="keyword">if</span> data == <span class="literal">nil</span> &#123;</span><br><span class="line">    <span class="comment">// 不存在</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ==================== 玩家表 - 多条表索引查询 ====================</span></span><br><span class="line"><span class="comment">// 特点: 主键查询有参数，索引查询有参数</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 主键查询 (按Id查询)</span></span><br><span class="line">data := pdb.LookupPlayer&#123;Table&#125;(id)</span><br><span class="line"><span class="keyword">if</span> data == <span class="literal">nil</span> &#123;</span><br><span class="line">    <span class="comment">// 不存在</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 单条索引查询 (index by field) - 有参数</span></span><br><span class="line">data := pdb.LookupPlayer&#123;Table&#125;ByField(fieldValue)</span><br><span class="line"><span class="keyword">if</span> data == <span class="literal">nil</span> &#123;</span><br><span class="line">    <span class="comment">// 不存在</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 多条索引查询 (index many by field) - 遍历</span></span><br><span class="line">pdb.SelectPlayer&#123;Table&#125;ByField(fieldValue, <span class="function"><span class="keyword">func</span><span class="params">(row *mdb.Player&#123;Table&#125;Row)</span></span> &#123;</span><br><span class="line">    data := row.Get()</span><br><span class="line">    <span class="comment">// 处理每条数据</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 遍历所有数据</span></span><br><span class="line">pdb.SelectPlayer&#123;Table&#125;(<span class="function"><span class="keyword">func</span><span class="params">(row *mdb.Player&#123;Table&#125;Row)</span></span> &#123;</span><br><span class="line">    data := row.Get()</span><br><span class="line">    <span class="comment">// 处理每条数据</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 复合索引查询 (index by field1,field2)</span></span><br><span class="line">data := pdb.LookupPlayer&#123;Table&#125;ByField1AndField2(f1, f2)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 复合多条索引查询 (index many by field1,field2)</span></span><br><span class="line">pdb.SelectPlayer&#123;Table&#125;ByField1AndField2(f1, f2, <span class="function"><span class="keyword">func</span><span class="params">(row *mdb.Player&#123;Table&#125;Row)</span></span> &#123;</span><br><span class="line">    data := row.Get()</span><br><span class="line">    <span class="comment">// 处理</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h3 id="Row迭代器"><a href="#Row迭代器" class="headerlink" title="Row迭代器"></a>Row迭代器</h3><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Row迭代器用于遍历查询结果</span></span><br><span class="line">db.SelectGlobal&#123;Table&#125;ByField(fieldValue, <span class="function"><span class="keyword">func</span><span class="params">(row *mdb.Global&#123;Table&#125;Row)</span></span> &#123;</span><br><span class="line">    <span class="comment">// 获取数据</span></span><br><span class="line">    data := row.Get()</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 跳出循环</span></span><br><span class="line">    row.Break()</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 注意：row.Get() 返回的是副本，修改不会影响原数据</span></span><br><span class="line">    <span class="comment">// 需要更新时使用 db.UpdateGlobal&#123;Table&#125;(data)</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h3 id="新增表流程"><a href="#新增表流程" class="headerlink" title="新增表流程"></a>新增表流程</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 1. 创建迁移脚本</span></span><br><span class="line"><span class="comment"># database/gameserver/changes/global_&#123;table&#125;/0.0.01.001.php</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. 添加索引定义</span></span><br><span class="line"><span class="comment"># database/gameserver/mdb_index.php</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 3. 执行生成</span></span><br><span class="line">make mdb</span><br><span class="line"></span><br><span class="line"><span class="comment"># 实际执行:</span></span><br><span class="line"><span class="comment"># php database/framework/main.php upgrade gameserver    # 升级数据库</span></span><br><span class="line"><span class="comment"># php database/framework/main.php invoke gameserver go_mdb  # 生成Go代码</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="生成文件"><a href="#生成文件" class="headerlink" title="生成文件"></a>生成文件</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">internal/gameserver/mdb/</span><br><span class="line">├── mdb.auto.go           # Database结构体、初始化</span><br><span class="line">├── mdb_tables.auto.go    # 表结构定义、CRUD方法</span><br><span class="line">├── mdb_rows.auto.go      # Row迭代器</span><br><span class="line">├── mdb_loaders.auto.go   # 数据加载器</span><br><span class="line">├── mdb_modify.auto.go    # 数据修改追踪</span><br><span class="line">├── mdb_trans.auto.go     # 事务处理</span><br><span class="line">├── mdb_prepare.auto.go   # SQL预处理语句</span><br><span class="line">├── mdb_cgo.auto.c        # C语言绑定 (高性能)</span><br><span class="line">└── mdb_cgo.auto.h        # C头文件</span><br></pre></td></tr></table></figure>
+
+<h3 id="事务要求"><a href="#事务要求" class="headerlink" title="事务要求"></a>事务要求</h3><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="comment">// ==================== API 请求 - 自动事务 ====================</span></span><br><span class="line"><span class="comment">// API 请求自动在事务中执行，无需手动开启事务</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(this *&#123;Module&#125;)</span></span> XxxReq(sess *link.Session, req *XxxReq) (*XxxRsp, <span class="type">error</span>) &#123;</span><br><span class="line">    s := state.State(sess)</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 直接操作数据库，已在事务中</span></span><br><span class="line">    pdb := this.db.GetPlayerDB(s.PlayerId)</span><br><span class="line">    data := pdb.LookupPlayer&#123;Table&#125;()</span><br><span class="line">    data.Field1 += <span class="number">1</span></span><br><span class="line">    pdb.UpdatePlayer&#123;Table&#125;(data)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> &amp;XxxRsp&#123;&#125;, <span class="literal">nil</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ==================== HAPI 请求 - 自动事务 ====================</span></span><br><span class="line"><span class="comment">// HTTP API 请求自动在事务中执行，无需手动开启事务</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(api *&#123;Module&#125;HAPI)</span></span> HttpXxx(ctx context.Context, req *HttpXxxIn) (*HttpXxxOut, <span class="type">error</span>) &#123;</span><br><span class="line">    <span class="comment">// 直接操作数据库，已在事务中</span></span><br><span class="line">    pdb := api.db.GetPlayerDB(req.Pid)</span><br><span class="line">    data := pdb.LookupPlayer&#123;Table&#125;()</span><br><span class="line">    data.Field1 += <span class="number">1</span></span><br><span class="line">    pdb.UpdatePlayer&#123;Table&#125;(data)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> &amp;HttpXxxOut&#123;&#125;, <span class="literal">nil</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ==================== 异步任务 - 需要手动开启事务 ====================</span></span><br><span class="line"><span class="comment">// 使用 GoTransaction 开启新事务</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(mod *&#123;Module&#125;Mod)</span></span> AsyncUpdateData(ctx context.Context, pid <span class="type">int64</span>) &#123;</span><br><span class="line">    middleware.GoTransaction(<span class="string">&quot;AsyncUpdateData&quot;</span>, <span class="function"><span class="keyword">func</span><span class="params">(ctx context.Context)</span></span> &#123;</span><br><span class="line">        <span class="comment">// 在事务中操作数据库</span></span><br><span class="line">        pdb := mod.db.GetPlayerDB(pid)</span><br><span class="line">        data := pdb.LookupPlayer&#123;Table&#125;()</span><br><span class="line">        data.Field1 += <span class="number">1</span></span><br><span class="line">        pdb.UpdatePlayer&#123;Table&#125;(data)</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ==================== 无事务异步任务 ====================</span></span><br><span class="line"><span class="comment">// GoWork 和 Go 无事务保护，用于不需要数据库操作的场景</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(mod *&#123;Module&#125;Mod)</span></span> AsyncNotify(ctx context.Context) &#123;</span><br><span class="line">    middleware.GoWork(ctx, <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="comment">// 无事务保护，不要操作数据库</span></span><br><span class="line">        <span class="comment">// 可以发送通知、调用外部API等</span></span><br><span class="line">        mod.ALL.System.Notify(...)</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ==================== 全局表事务 ====================</span></span><br><span class="line"><span class="comment">// 操作全局表需要使用全局事务</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(mod *&#123;Module&#125;Mod)</span></span> UpdateGlobalData(ctx context.Context) &#123;</span><br><span class="line">    <span class="comment">// 全局表在全局事务中操作</span></span><br><span class="line">    data := mod.db.LookupGlobal&#123;Table&#125;(id)</span><br><span class="line">    data.Field1 += <span class="number">1</span></span><br><span class="line">    mod.db.UpdateGlobal&#123;Table&#125;(data)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="事务类型总结"><a href="#事务类型总结" class="headerlink" title="事务类型总结"></a>事务类型总结</h3><table>
+<thead>
+<tr>
+<th>场景</th>
+<th>事务类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>API 请求</strong></td>
+<td>自动事务</td>
+<td>请求自动在事务中执行</td>
+</tr>
+<tr>
+<td><strong>HAPI 请求</strong></td>
+<td>自动事务</td>
+<td>HTTP请求自动在事务中执行</td>
+</tr>
+<tr>
+<td><strong>异步任务</strong></td>
+<td><code>GoTransaction</code></td>
+<td>需要手动开启事务</td>
+</tr>
+<tr>
+<td><strong>无数据库操作</strong></td>
+<td><code>GoWork</code> &#x2F; <code>Go</code></td>
+<td>无事务保护</td>
+</tr>
+</tbody></table>
+<h3 id="事务中间件"><a href="#事务中间件" class="headerlink" title="事务中间件"></a>事务中间件</h3><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="comment">// API/HAPI 请求的事务中间件链</span></span><br><span class="line">ctx := contextimpl.NewMidContext(</span><br><span class="line">    middleware.Factory.NewRecover(),           <span class="comment">// 异常恢复</span></span><br><span class="line">    middleware.Factory.NewTraceId(),           <span class="comment">// 链路追踪ID</span></span><br><span class="line">    middleware.Factory.NewSetLogger(...),      <span class="comment">// 日志设置</span></span><br><span class="line">    middleware.Factory.NewStatRecorder(),      <span class="comment">// 统计记录</span></span><br><span class="line">    middleware.Factory.NewNotifier(...),       <span class="comment">// 通知器</span></span><br><span class="line">    middleware.Factory.NewTransaction(db),     <span class="comment">// 事务中间件 ← 关键</span></span><br><span class="line">    middleware.Factory.NewDebugStats(db),      <span class="comment">// 调试统计</span></span><br><span class="line">    middleware.Factory.NewTask(),              <span class="comment">// 任务队列</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<h2 id="Redis-规范"><a href="#Redis-规范" class="headerlink" title="Redis 规范"></a>Redis 规范</h2><h3 id="Key-生成"><a href="#Key-生成" class="headerlink" title="Key 生成"></a>Key 生成</h3><figure class="highlight go"><table><tr><td class="code"><pre><span class="line">key := share.GenerateRedisKey(share.&#123;Module&#125;RankKey, activityId, period)</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> (</span><br><span class="line">    &#123;Module&#125;Member  = <span class="string">&quot;&#123;module&#125;_member&quot;</span></span><br><span class="line">    &#123;Module&#125;Info    = <span class="string">&quot;&#123;module&#125;_info&quot;</span></span><br><span class="line">    &#123;Module&#125;RankKey = <span class="string">&quot;&#123;module&#125;_rank&quot;</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<h3 id="Redis-操作"><a href="#Redis-操作" class="headerlink" title="Redis 操作"></a>Redis 操作</h3><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="comment">// String</span></span><br><span class="line">mod.ALL.Redis.Set(ctx, key, value, <span class="literal">nil</span>)</span><br><span class="line">mod.ALL.Redis.Get(ctx, key, <span class="function"><span class="keyword">func</span><span class="params">(ctx context.Context, cmd *redis.StringCmd)</span></span> &#123;&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// Hash</span></span><br><span class="line">mod.ALL.Redis.HSet(ctx, key, field, value, <span class="literal">nil</span>)</span><br><span class="line">mod.ALL.Redis.HGet(ctx, key, field, <span class="function"><span class="keyword">func</span><span class="params">(ctx context.Context, cmd *redis.StringCmd)</span></span> &#123;&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// ZSet</span></span><br><span class="line">mod.ALL.Redis.ZAdd(ctx, key, <span class="literal">nil</span>, &amp;redis.Z&#123;Score: score, Member: member&#125;)</span><br><span class="line">mod.ALL.Redis.ZRevRangeWithScores(ctx, key, <span class="number">0</span>, <span class="number">99</span>, <span class="function"><span class="keyword">func</span><span class="params">(ctx context.Context, cmd *redis.ZSliceCmd)</span></span> &#123;&#125;)</span><br></pre></td></tr></table></figure>
+
+<h2 id="错误处理"><a href="#错误处理" class="headerlink" title="错误处理"></a>错误处理</h2><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 参数校验</span></span><br><span class="line">errors.When(param &lt;= <span class="number">0</span>, errors.Code_BAD_PARAMETER)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 返回错误</span></span><br><span class="line"><span class="keyword">return</span> &amp;XxxRsp&#123;Code: errors.Code_&#123;MODULE&#125;_NOT_FOUND&#125;, <span class="literal">nil</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 错误码定义 (errors.proto)</span></span><br><span class="line">enum Code &#123;</span><br><span class="line">  SUCCESS = <span class="number">0</span>;</span><br><span class="line">  BAD_PARAMETER = <span class="number">5</span>;</span><br><span class="line">  </span><br><span class="line">  <span class="comment">// 模块错误码 (按模块分配范围)</span></span><br><span class="line">  &#123;MODULE&#125;_NOT_FOUND = <span class="number">42001</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="日志规范"><a href="#日志规范" class="headerlink" title="日志规范"></a>日志规范</h2><figure class="highlight go"><table><tr><td class="code"><pre><span class="line">logger.GetLogger().Info(<span class="string">&quot;操作描述&quot;</span>,</span><br><span class="line">    field.Int64(<span class="string">&quot;pid&quot;</span>, pid),</span><br><span class="line">    field.Any(<span class="string">&quot;data&quot;</span>, data),</span><br><span class="line">    field.Error(err),</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<h2 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h2><ol>
+<li><strong>代码生成顺序</strong>: 先 <code>make code</code> 生成代码，再开发业务逻辑</li>
+<li><strong>模块通信</strong>: 同服通过 <code>agent.Modules</code> 直接调用，跨服通过 HTTP API</li>
+<li><strong>导出方法</strong>: 首字母大写，会被 <code>make agent</code> 扫描生成接口</li>
+<li><strong>非导出方法</strong>: 首字母小写，仅模块内部使用</li>
+<li><strong>事务处理</strong>: 使用 <code>middleware.GoTransaction</code> 包装事务</li>
+<li><strong>异步操作</strong>: 使用 <code>middleware.Go</code> 或 <code>middleware.GoWork</code> 执行异步任务</li>
+<li><strong>测试隔离</strong>: 使用 <code>mock.User(t)</code> 创建独立测试环境</li>
+<li><strong>命名规范</strong>: <code>&#123;Module&#125;</code> 为大驼峰，<code>&#123;module&#125;</code> 为小写下划线</li>
+<li><strong>问题反馈</strong>: 遇到不懂的、不熟悉的问题及时反馈给用户，让用户来帮助解答</li>
+</ol>
+<h2 id="mock-x2F-apis-go-更新说明"><a href="#mock-x2F-apis-go-更新说明" class="headerlink" title="mock&#x2F;apis.go 更新说明"></a>mock&#x2F;apis.go 更新说明</h2><p>创建新模块后，需要在 <code>internal/gameserver/test/mock/apis.go</code> 中添加模块引用，否则测试无法运行。</p>
+<h3 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h3><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 1. 添加 import</span></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">    <span class="string">&quot;lite-ulala/internal/gameserver/module/modules/&#123;module&#125;&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 2. 在 TestApis 结构体中添加字段</span></span><br><span class="line"><span class="keyword">type</span> TestApis <span class="keyword">struct</span> &#123;</span><br><span class="line">    <span class="comment">// ... 其他模块</span></span><br><span class="line">    &#123;Module&#125; *&#123;module&#125;.&#123;Module&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 3. 在 GetTestApis 函数中添加</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">GetTestApis</span><span class="params">(ms *agent.Modules)</span></span> *TestApis &#123;</span><br><span class="line">    <span class="keyword">return</span> &amp;TestApis&#123;</span><br><span class="line">        <span class="comment">// ... 其他模块</span></span><br><span class="line">        &#123;Module&#125;: GetAPIByModules[*&#123;module&#125;.&#123;Module&#125;](ms),</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h3><p>假设新增 <code>pet</code> 模块：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 1. import</span></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    <span class="string">&quot;lite-ulala/internal/gameserver/module/modules/pet&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 2. 结构体</span></span><br><span class="line"><span class="keyword">type</span> TestApis <span class="keyword">struct</span> &#123;</span><br><span class="line">    <span class="comment">// ... 其他模块</span></span><br><span class="line">    Pet *pet.Pet</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 3. GetTestApis</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">GetTestApis</span><span class="params">(ms *agent.Modules)</span></span> *TestApis &#123;</span><br><span class="line">    <span class="keyword">return</span> &amp;TestApis&#123;</span><br><span class="line">        <span class="comment">// ... 其他模块</span></span><br><span class="line">        Pet: GetAPIByModules[*pet.Pet](ms),</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>AI</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>MySQL 慢查询日志实战分析</title>
+    <url>/2023/04/08/mysql/MySQL%E6%85%A2%E6%9F%A5%E8%AF%A2%E6%97%A5%E5%BF%97%E5%AE%9E%E6%88%98%E5%88%86%E6%9E%90/</url>
+    <content><![CDATA[<h1 id="MySQL-慢查询日志实战分析"><a href="#MySQL-慢查询日志实战分析" class="headerlink" title="MySQL 慢查询日志实战分析"></a>MySQL 慢查询日志实战分析</h1><blockquote>
+<p>从 0 到 1 实战排查慢 SQL</p>
+</blockquote>
+<h2 id="一、什么是慢查询日志？"><a href="#一、什么是慢查询日志？" class="headerlink" title="一、什么是慢查询日志？"></a>一、什么是慢查询日志？</h2><p>慢查询日志（Slow Query Log）是 MySQL 提供的一套 SQL 性能诊断机制，用于记录：</p>
+<ul>
+<li>执行时间超过阈值的 SQL</li>
+<li>未走索引的 SQL</li>
+<li>锁等待时间过长的 SQL</li>
+</ul>
+<p><strong>一句话：慢查询日志 &#x3D; 性能问题定位神器</strong></p>
+<h2 id="二、开启慢查询日志（生产必备）"><a href="#二、开启慢查询日志（生产必备）" class="headerlink" title="二、开启慢查询日志（生产必备）"></a>二、开启慢查询日志（生产必备）</h2><h3 id="1-查看当前配置"><a href="#1-查看当前配置" class="headerlink" title="1. 查看当前配置"></a>1. 查看当前配置</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SHOW</span> VARIABLES <span class="keyword">LIKE</span> <span class="string">&#x27;%slow%&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>重点关注参数：</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>slow_query_log</code></td>
+<td>是否开启慢查询</td>
+</tr>
+<tr>
+<td><code>slow_query_log_file</code></td>
+<td>慢查询日志文件路径</td>
+</tr>
+<tr>
+<td><code>long_query_time</code></td>
+<td>超过多少秒算慢</td>
+</tr>
+<tr>
+<td><code>log_queries_not_using_indexes</code></td>
+<td>是否记录未走索引 SQL</td>
+</tr>
+</tbody></table>
+<h3 id="2-开启慢查询日志"><a href="#2-开启慢查询日志" class="headerlink" title="2. 开启慢查询日志"></a>2. 开启慢查询日志</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SET</span> <span class="keyword">GLOBAL</span> slow_query_log <span class="operator">=</span> <span class="keyword">ON</span>;</span><br><span class="line"><span class="keyword">SET</span> <span class="keyword">GLOBAL</span> long_query_time <span class="operator">=</span> <span class="number">1</span>;</span><br><span class="line"><span class="keyword">SET</span> <span class="keyword">GLOBAL</span> log_queries_not_using_indexes <span class="operator">=</span> <span class="keyword">ON</span>;</span><br></pre></td></tr></table></figure>
+
+<p><strong>生产推荐：<code>long_query_time = 0.5</code></strong></p>
+<p>互联网高并发系统，0.5s 已经算慢。</p>
+<h3 id="3-永久生效配置（my-cnf）"><a href="#3-永久生效配置（my-cnf）" class="headerlink" title="3. 永久生效配置（my.cnf）"></a>3. 永久生效配置（my.cnf）</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">[mysqld]</span><br><span class="line">slow_query_log <span class="operator">=</span> <span class="keyword">ON</span></span><br><span class="line">slow_query_log_file <span class="operator">=</span> <span class="operator">/</span>var<span class="operator">/</span>log<span class="operator">/</span>mysql<span class="operator">/</span>slow.log</span><br><span class="line">long_query_time <span class="operator">=</span> <span class="number">1</span></span><br><span class="line">log_queries_not_using_indexes <span class="operator">=</span> <span class="keyword">ON</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="三、慢查询日志格式"><a href="#三、慢查询日志格式" class="headerlink" title="三、慢查询日志格式"></a>三、慢查询日志格式</h2><p>示例：</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"># <span class="type">Time</span>: <span class="number">2026</span><span class="number">-02</span><span class="number">-25</span>T12:<span class="number">01</span>:<span class="number">33.234567</span>Z</span><br><span class="line"># <span class="keyword">User</span><span class="variable">@Host</span>: root[root] @ localhost []</span><br><span class="line"># Query_time: <span class="number">3.421</span>  Lock_time: <span class="number">0.000</span>  Rows_sent: <span class="number">1</span>  Rows_examined: <span class="number">102341</span></span><br><span class="line"><span class="keyword">SET</span> <span class="type">timestamp</span><span class="operator">=</span><span class="number">1708843293</span>;</span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> orders <span class="keyword">WHERE</span> user_id <span class="operator">=</span> <span class="number">10086</span>;</span><br></pre></td></tr></table></figure>
+
+<p>核心指标解析：</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>Query_time</code></td>
+<td>SQL 执行耗时</td>
+</tr>
+<tr>
+<td><code>Lock_time</code></td>
+<td>锁等待时间</td>
+</tr>
+<tr>
+<td><code>Rows_examined</code></td>
+<td>扫描行数</td>
+</tr>
+<tr>
+<td><code>Rows_sent</code></td>
+<td>返回行数</td>
+</tr>
+</tbody></table>
+<p><strong>关键优化指标：<code>Rows_examined / Rows_sent</code> 比例越大 → 扫描越多 → 性能越差</strong></p>
+<p>理想值：&lt; 100</p>
+<h2 id="四、慢查询日志分析工具"><a href="#四、慢查询日志分析工具" class="headerlink" title="四、慢查询日志分析工具"></a>四、慢查询日志分析工具</h2><h3 id="方案一：mysqldumpslow（自带）"><a href="#方案一：mysqldumpslow（自带）" class="headerlink" title="方案一：mysqldumpslow（自带）"></a>方案一：mysqldumpslow（自带）</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mysqldumpslow -s t -t 10 slow.log</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>-s t</code></td>
+<td>按时间排序</td>
+</tr>
+<tr>
+<td><code>-t 10</code></td>
+<td>取前 10 条</td>
+</tr>
+</tbody></table>
+<h3 id="方案二：pt-query-digest（企业级）"><a href="#方案二：pt-query-digest（企业级）" class="headerlink" title="方案二：pt-query-digest（企业级）"></a>方案二：pt-query-digest（企业级）</h3><p>Percona 官方神器（强烈推荐）</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">pt-query-digest slow.log &gt; report.txt</span><br></pre></td></tr></table></figure>
+
+<p>输出分析报告，包含：</p>
+<ul>
+<li>TOP 慢 SQL</li>
+<li>平均耗时</li>
+<li>调用频率</li>
+<li>95 分位耗时</li>
+<li>扫描行数统计</li>
+</ul>
+<h2 id="五、慢-SQL-实战分析-5-步法"><a href="#五、慢-SQL-实战分析-5-步法" class="headerlink" title="五、慢 SQL 实战分析 5 步法"></a>五、慢 SQL 实战分析 5 步法</h2><h3 id="Step-1：定位最慢-SQL"><a href="#Step-1：定位最慢-SQL" class="headerlink" title="Step 1：定位最慢 SQL"></a>Step 1：定位最慢 SQL</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">pt-query-digest slow.log</span><br></pre></td></tr></table></figure>
+
+<p>找：总耗时最高、调用最频繁、平均耗时最大</p>
+<h3 id="Step-2：EXPLAIN-分析执行计划"><a href="#Step-2：EXPLAIN-分析执行计划" class="headerlink" title="Step 2：EXPLAIN 分析执行计划"></a>Step 2：EXPLAIN 分析执行计划</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">EXPLAIN <span class="keyword">SELECT</span> ...;</span><br></pre></td></tr></table></figure>
+
+<p>重点看：</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>优化目标</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>type</code></td>
+<td>ref &#x2F; range &#x2F; const</td>
+</tr>
+<tr>
+<td><code>key</code></td>
+<td>是否命中索引</td>
+</tr>
+<tr>
+<td><code>rows</code></td>
+<td>扫描行数</td>
+</tr>
+<tr>
+<td><code>Extra</code></td>
+<td>是否 Using index</td>
+</tr>
+</tbody></table>
+<h3 id="Step-3：判断慢因类型"><a href="#Step-3：判断慢因类型" class="headerlink" title="Step 3：判断慢因类型"></a>Step 3：判断慢因类型</h3><table>
+<thead>
+<tr>
+<th>类型</th>
+<th>典型特征</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>索引缺失</td>
+<td>type&#x3D;ALL</td>
+</tr>
+<tr>
+<td>索引失效</td>
+<td>使用函数 &#x2F; 隐式转换</td>
+</tr>
+<tr>
+<td>深分页</td>
+<td>LIMIT 100000,10</td>
+</tr>
+<tr>
+<td>大表 Join</td>
+<td>Nested Loop</td>
+</tr>
+<tr>
+<td>锁冲突</td>
+<td>Lock_time 高</td>
+</tr>
+</tbody></table>
+<h3 id="Step-4：制定优化方案"><a href="#Step-4：制定优化方案" class="headerlink" title="Step 4：制定优化方案"></a>Step 4：制定优化方案</h3><table>
+<thead>
+<tr>
+<th>问题</th>
+<th>解决方案</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>无索引</td>
+<td>补索引</td>
+</tr>
+<tr>
+<td>索引失效</td>
+<td>改 SQL</td>
+</tr>
+<tr>
+<td>深分页</td>
+<td>子查询 + 覆盖索引</td>
+</tr>
+<tr>
+<td>Join 慢</td>
+<td>先过滤再 join</td>
+</tr>
+<tr>
+<td>锁冲突</td>
+<td>拆事务 &#x2F; 降隔离级别</td>
+</tr>
+</tbody></table>
+<h3 id="Step-5：对比优化效果"><a href="#Step-5：对比优化效果" class="headerlink" title="Step 5：对比优化效果"></a>Step 5：对比优化效果</h3><p>优化前：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Query_time: 3.42s</span><br><span class="line">Rows_examined: 102341</span><br></pre></td></tr></table></figure>
+
+<p>优化后：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Query_time: 0.012s</span><br><span class="line">Rows_examined: 12</span><br></pre></td></tr></table></figure>
+
+<h2 id="六、真实慢-SQL-优化案例"><a href="#六、真实慢-SQL-优化案例" class="headerlink" title="六、真实慢 SQL 优化案例"></a>六、真实慢 SQL 优化案例</h2><h3 id="案例-1：百万表分页慢"><a href="#案例-1：百万表分页慢" class="headerlink" title="案例 1：百万表分页慢"></a>案例 1：百万表分页慢</h3><p><strong>问题 SQL：</strong></p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> orders</span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> id <span class="keyword">DESC</span></span><br><span class="line">LIMIT <span class="number">100000</span>,<span class="number">10</span>;</span><br></pre></td></tr></table></figure>
+
+<p><strong>优化方案：子查询 + 覆盖索引</strong></p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span></span><br><span class="line"><span class="keyword">FROM</span> orders</span><br><span class="line"><span class="keyword">WHERE</span> id <span class="operator">&gt;=</span> (</span><br><span class="line">  <span class="keyword">SELECT</span> id <span class="keyword">FROM</span> orders</span><br><span class="line">  <span class="keyword">ORDER</span> <span class="keyword">BY</span> id <span class="keyword">DESC</span></span><br><span class="line">  LIMIT <span class="number">100000</span>,<span class="number">1</span></span><br><span class="line">)</span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> id <span class="keyword">DESC</span></span><br><span class="line">LIMIT <span class="number">10</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="案例-2：索引失效"><a href="#案例-2：索引失效" class="headerlink" title="案例 2：索引失效"></a>案例 2：索引失效</h3><p><strong>问题 SQL：</strong></p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> users <span class="keyword">WHERE</span> phone <span class="operator">+</span> <span class="number">0</span> <span class="operator">=</span> <span class="number">13800138000</span>;</span><br></pre></td></tr></table></figure>
+
+<p><strong>正确写法：</strong></p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> users <span class="keyword">WHERE</span> phone <span class="operator">=</span> <span class="string">&#x27;13800138000&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<h2 id="七、慢-SQL-监控体系搭建方案"><a href="#七、慢-SQL-监控体系搭建方案" class="headerlink" title="七、慢 SQL 监控体系搭建方案"></a>七、慢 SQL 监控体系搭建方案</h2><h3 id="监控架构推荐"><a href="#监控架构推荐" class="headerlink" title="监控架构推荐"></a>监控架构推荐</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">MySQL</span><br><span class="line">  ↓</span><br><span class="line">slow log</span><br><span class="line">  ↓</span><br><span class="line">pt-query-digest</span><br><span class="line">  ↓</span><br><span class="line">Prometheus + Grafana</span><br><span class="line">  ↓</span><br><span class="line">告警系统（飞书 / 钉钉）</span><br></pre></td></tr></table></figure>
+
+<h3 id="核心指标告警阈值"><a href="#核心指标告警阈值" class="headerlink" title="核心指标告警阈值"></a>核心指标告警阈值</h3><table>
+<thead>
+<tr>
+<th>指标</th>
+<th>告警阈值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>平均慢 SQL 数</td>
+<td>&gt; 100 条&#x2F;分钟</td>
+</tr>
+<tr>
+<td>P95 响应时间</td>
+<td>&gt; 500ms</td>
+</tr>
+<tr>
+<td>锁等待</td>
+<td>&gt; 100ms</td>
+</tr>
+</tbody></table>
+<h2 id="八、慢-SQL-排查万能口诀"><a href="#八、慢-SQL-排查万能口诀" class="headerlink" title="八、慢 SQL 排查万能口诀"></a>八、慢 SQL 排查万能口诀</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">一查慢日志，二看执行计划，三断索引，四改 SQL，五压测验证</span><br></pre></td></tr></table></figure>
+
+<h2 id="九、总结"><a href="#九、总结" class="headerlink" title="九、总结"></a>九、总结</h2><p>今天你掌握了：</p>
+<ul>
+<li>慢查询日志完整配置</li>
+<li>pt-query-digest 实战分析</li>
+<li>慢 SQL 五步定位法</li>
+<li>企业级慢 SQL 监控体系</li>
+<li>多个真实慢 SQL 优化案例</li>
+</ul>
+]]></content>
+      <categories>
+        <category>数据库相关</category>
+      </categories>
+      <tags>
+        <tag>sql</tag>
       </tags>
   </entry>
 </search>
