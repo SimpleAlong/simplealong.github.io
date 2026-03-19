@@ -1,0 +1,1804 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+  <link rel="manifest" href="/images/manifest.json">
+
+
+  <meta name="msapplication-config" content="/images/browserconfig.xml" />
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="整理分类，方便学习">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Redis 常见面试题">
+<meta property="og:url" content="http://simplealong.github.io/2026/03/19/redis/redis-interview/index.html">
+<meta property="og:site_name" content="Mr.Liu">
+<meta property="og:description" content="整理分类，方便学习">
+<meta property="og:locale">
+<meta property="article:published_time" content="2026-03-19T07:31:54.221Z">
+<meta property="article:modified_time" content="2026-03-19T07:57:14.232Z">
+<meta property="article:author" content="Mr.Liu">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://simplealong.github.io/2026/03/19/redis/redis-interview/"/>
+
+
+
+
+
+  <title>Redis 常见面试题 | Mr.Liu</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Mr.Liu</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">记录生活中的点点滴滴</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://simplealong.github.io/2026/03/19/redis/redis-interview/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Mr.Liu">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Redis 常见面试题</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2026-03-19T15:31:54+08:00">
+                2026-03-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Redis/" itemprop="url" rel="index">
+                    <span itemprop="name">Redis</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+              <div class="post-description">
+                  整理分类，方便学习
+              </div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="Redis-常见面试题"><a href="#Redis-常见面试题" class="headerlink" title="Redis 常见面试题"></a>Redis 常见面试题</h1><blockquote>
+<p>整理分类，方便学习</p>
+</blockquote>
+<hr>
+<h1 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h1><table>
+<thead>
+<tr>
+<th>篇序</th>
+<th>内容</th>
+<th>关键词</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="#%E7%AC%AC%E4%B8%80%E7%AF%87%E5%9F%BA%E7%A1%80%E5%85%A5%E9%97%A8">第一篇</a></td>
+<td>基础入门</td>
+<td>使用场景</td>
+</tr>
+<tr>
+<td><a href="#%E7%AC%AC%E4%BA%8C%E7%AF%87%E7%BC%93%E5%AD%98%E4%B8%89%E5%89%91%E5%AE%A2">第二篇</a></td>
+<td>缓存三剑客</td>
+<td>穿透&#x2F;击穿&#x2F;雪崩</td>
+</tr>
+<tr>
+<td><a href="#%E7%AC%AC%E4%B8%89%E7%AF%87%E7%BC%93%E5%AD%98%E4%B8%80%E8%87%B4%E6%80%A7">第三篇</a></td>
+<td>缓存一致性</td>
+<td>先删&#x2F;分布式锁&#x2F;Canal</td>
+</tr>
+<tr>
+<td><a href="#%E7%AC%AC%E5%9B%9B%E7%AF%87%E6%8C%81%E4%B9%85%E5%8C%96%E6%9C%BA%E5%88%B6">第四篇</a></td>
+<td>持久化机制</td>
+<td>RDB&#x2F;AOF</td>
+</tr>
+<tr>
+<td><a href="#%E7%AC%AC%E4%BA%94%E7%AF%87%E8%BF%87%E6%9C%9F%E4%B8%8E%E6%B7%98%E6%B1%B0">第五篇</a></td>
+<td>过期与淘汰</td>
+<td>惰性&#x2F;定期&#x2F;8种策略</td>
+</tr>
+<tr>
+<td><a href="#%E7%AC%AC%E5%85%AD%E7%AF%87%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81">第六篇</a></td>
+<td>分布式锁</td>
+<td>SETNX&#x2F;WatchDog&#x2F;RedLock</td>
+</tr>
+<tr>
+<td><a href="#%E7%AC%AC%E4%B8%83%E7%AF%87%E9%9B%86%E7%BE%A4%E6%96%B9%E6%A1%88">第七篇</a></td>
+<td>集群方案</td>
+<td>主从&#x2F;哨兵&#x2F;分片</td>
+</tr>
+<tr>
+<td><a href="#%E7%AC%AC%E5%85%AB%E7%AF%87redis-%E4%B8%BA%E4%BB%80%E4%B9%88%E5%BF%AB">第八篇</a></td>
+<td>Redis 为什么快</td>
+<td>内存&#x2F;IO多路复用</td>
+</tr>
+<tr>
+<td><a href="#%E7%AC%AC%E4%B9%9D%E7%AF%87%E9%9D%A2%E8%AF%95%E9%80%9F%E8%AE%B0">第九篇</a></td>
+<td>面试速记</td>
+<td>口诀背诵版</td>
+</tr>
+</tbody></table>
+<hr>
+<h1 id="第一篇：基础入门"><a href="#第一篇：基础入门" class="headerlink" title="第一篇：基础入门"></a>第一篇：基础入门</h1><h2 id="1-Redis-使用场景"><a href="#1-Redis-使用场景" class="headerlink" title="1. Redis 使用场景"></a>1. Redis 使用场景</h2><p>根据项目业务回答，常见场景：</p>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>数据结构</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>缓存</strong></td>
+<td>String&#x2F;Hash</td>
+<td>热点数据加速访问</td>
+</tr>
+<tr>
+<td><strong>分布式锁</strong></td>
+<td>String</td>
+<td>SETNX 实现互斥</td>
+</tr>
+<tr>
+<td><strong>排行榜</strong></td>
+<td>ZSet</td>
+<td>ZADD&#x2F;ZREVRANGE 实时排名</td>
+</tr>
+<tr>
+<td><strong>计数器</strong></td>
+<td>String</td>
+<td>INCR 点赞、浏览量</td>
+</tr>
+<tr>
+<td><strong>消息队列</strong></td>
+<td>List&#x2F;Stream</td>
+<td>LPUSH&#x2F;POP 异步处理</td>
+</tr>
+<tr>
+<td><strong>分布式会话</strong></td>
+<td>Hash</td>
+<td>用户登录状态</td>
+</tr>
+</tbody></table>
+<hr>
+<h1 id="第二篇：缓存三剑客"><a href="#第二篇：缓存三剑客" class="headerlink" title="第二篇：缓存三剑客"></a>第二篇：缓存三剑客</h1><blockquote>
+<p>穿透、击穿、雪崩是缓存最常见的三个问题</p>
+</blockquote>
+<h2 id="2-1-缓存穿透"><a href="#2-1-缓存穿透" class="headerlink" title="2.1 缓存穿透"></a>2.1 缓存穿透</h2><p><strong>问题</strong>：查询不存在的数据，每次都打到 DB</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">请求 → Redis(不存在) → MySQL(不存在) → 返回空</span><br></pre></td></tr></table></figure>
+
+<p><strong>危害</strong>：攻击者恶意大量查询不存在的数据，DB 可能挂掉</p>
+<p><strong>解决方案</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>方案</th>
+<th>原理</th>
+<th>优点</th>
+<th>缺点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>缓存空值</strong></td>
+<td>NULL 也缓存</td>
+<td>简单</td>
+<td>消耗内存</td>
+</tr>
+<tr>
+<td><strong>布隆过滤器</strong></td>
+<td>bitmap 判断存在性</td>
+<td>省内存</td>
+<td>有误判(~5%)</td>
+</tr>
+</tbody></table>
+<p><strong>布隆过滤器原理</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">bit数组: [0,0,0,0,0,0,0,0,0,0...]</span><br><span class="line">            ↓</span><br><span class="line">key1 经过3次hash → [2,5,7] → 置为1 → [0,0,1,0,0,1,0,1,0,0]</span><br><span class="line"></span><br><span class="line">key2 查询: hash → [2,5,7]</span><br><span class="line">判断: 数组[2]=1 &amp;&amp; [5]=1 &amp;&amp; [7]=1 → 可能存在（误判）</span><br><span class="line">判断: 如果有任何一个为0 → 一定不存在</span><br></pre></td></tr></table></figure>
+
+<p><strong>Go 实现</strong>：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="string">&quot;github.com/bits-and-blooms/bloom/v3&quot;</span></span><br><span class="line"></span><br><span class="line">bf := bloom.NewWithEstimates(<span class="number">100000</span>, <span class="number">0.03</span>)  <span class="comment">// 10万元素，3%误判率</span></span><br><span class="line">bf.AddString(<span class="string">&quot;key1&quot;</span>)</span><br><span class="line">exists := bf.TestString(<span class="string">&quot;key2&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-2-缓存击穿"><a href="#2-2-缓存击穿" class="headerlink" title="2.2 缓存击穿"></a>2.2 缓存击穿</h2><p><strong>问题</strong>：热点 key 过期瞬间，大量并发打到 DB</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">热点key过期 → 1000并发请求 → 同时查DB → DB崩溃</span><br></pre></td></tr></table></figure>
+
+<p><strong>解决方案</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>方案</th>
+<th>原理</th>
+<th>一致性</th>
+<th>性能</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>互斥锁</strong></td>
+<td>只允许一个请求查 DB</td>
+<td>强一致</td>
+<td>差</td>
+<td>数据一致性要求高</td>
+</tr>
+<tr>
+<td><strong>逻辑过期</strong></td>
+<td>不设过期时间，异步更新</td>
+<td>最终一致</td>
+<td>优</td>
+<td>高性能场景</td>
+</tr>
+</tbody></table>
+<p><strong>互斥锁 Go 实现</strong>：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">QueryWithMutex</span><span class="params">(ctx context.Context, key <span class="type">string</span>)</span></span> (<span class="type">string</span>, <span class="type">error</span>) &#123;</span><br><span class="line">    <span class="comment">// 1. 先查缓存</span></span><br><span class="line">    value, err := rdb.Get(ctx, key).Result()</span><br><span class="line">    <span class="keyword">if</span> err == <span class="literal">nil</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> value, <span class="literal">nil</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 2. 获取互斥锁</span></span><br><span class="line">    lockKey := <span class="string">&quot;lock:&quot;</span> + key</span><br><span class="line">    locked, _ := rdb.SetNX(ctx, lockKey, <span class="string">&quot;1&quot;</span>, <span class="number">10</span>*time.Second).Result()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> locked &#123;</span><br><span class="line">        <span class="keyword">defer</span> rdb.Del(ctx, lockKey)</span><br><span class="line">        <span class="comment">// 3. 查DB并写入缓存</span></span><br><span class="line">        value = queryFromDB(ctx, key)</span><br><span class="line">        rdb.Set(ctx, key, value, <span class="number">30</span>*time.Minute)</span><br><span class="line">        <span class="keyword">return</span> value, <span class="literal">nil</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 4. 竞争失败，等待重试</span></span><br><span class="line">    time.Sleep(<span class="number">50</span> * time.Millisecond)</span><br><span class="line">    <span class="keyword">return</span> QueryWithMutex(ctx, key)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>逻辑过期 Go 实现</strong>：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> CacheData <span class="keyword">struct</span> &#123;</span><br><span class="line">    Data       <span class="type">string</span> <span class="string">`json:&quot;data&quot;`</span></span><br><span class="line">    ExpireTime <span class="type">int64</span>  <span class="string">`json:&quot;expireTime&quot;`</span>  <span class="comment">// 逻辑过期时间，非Redis过期</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">QueryWithLogicalExpire</span><span class="params">(ctx context.Context, key <span class="type">string</span>)</span></span> (<span class="type">string</span>, <span class="type">error</span>) &#123;</span><br><span class="line">    jsonStr, _ := rdb.Get(ctx, key).Result()</span><br><span class="line">    <span class="keyword">var</span> data CacheData</span><br><span class="line">    json.Unmarshal([]<span class="type">byte</span>(jsonStr), &amp;data)</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 判断逻辑过期</span></span><br><span class="line">    <span class="keyword">if</span> data.ExpireTime &lt; time.Now().UnixMilli() &#123;</span><br><span class="line">        lockKey := <span class="string">&quot;lock:&quot;</span> + key</span><br><span class="line">        <span class="keyword">if</span> rdb.SetNX(ctx, lockKey, <span class="string">&quot;1&quot;</span>, <span class="number">10</span>*time.Second).Val() &#123;</span><br><span class="line">            <span class="keyword">go</span> rebuildCache(key)  <span class="comment">// 异步重建，不阻塞返回</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> data.Data, <span class="literal">nil</span>  <span class="comment">// 返回旧数据</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-3-缓存雪崩"><a href="#2-3-缓存雪崩" class="headerlink" title="2.3 缓存雪崩"></a>2.3 缓存雪崩</h2><p><strong>问题</strong>：大量 key 同时失效，或 Redis 宕机</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">同一时刻: 10000个key过期 → 10000请求同时打DB → DB崩溃</span><br></pre></td></tr></table></figure>
+
+<p><strong>与击穿的区别</strong>：</p>
+<ul>
+<li><strong>雪崩</strong>：多个 key 同时失效</li>
+<li><strong>击穿</strong>：单个热点 key 失效</li>
+</ul>
+<p><strong>解决方案</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>方案</th>
+<th>做法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>随机 TTL</strong></td>
+<td><code>1800 + rand.Intn(300)</code> 秒</td>
+</tr>
+<tr>
+<td><strong>集群高可用</strong></td>
+<td>哨兵&#x2F;集群模式</td>
+</tr>
+<tr>
+<td><strong>限流降级</strong></td>
+<td><code>rate.NewLimiter(1000, 100)</code></td>
+</tr>
+</tbody></table>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 随机TTL</span></span><br><span class="line">ttl := <span class="number">1800</span> + rand.Intn(<span class="number">300</span>)</span><br><span class="line">rdb.Set(ctx, key, value, time.Duration(ttl)*time.Second)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 限流</span></span><br><span class="line">limiter := rate.NewLimiter(rate.Limit(<span class="number">1000</span>), <span class="number">100</span>)</span><br><span class="line"><span class="keyword">if</span> !limiter.Allow() &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;&quot;</span>, fmt.Errorf(<span class="string">&quot;rate limit&quot;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="缓存问题对比速记"><a href="#缓存问题对比速记" class="headerlink" title="缓存问题对比速记"></a>缓存问题对比速记</h2><table>
+<thead>
+<tr>
+<th>问题</th>
+<th>场景</th>
+<th>关键词</th>
+<th>解决方案</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>穿透</strong></td>
+<td>查询不存在的数据</td>
+<td>攻击&#x2F;恶意查询</td>
+<td>缓存空值&#x2F;布隆过滤器</td>
+</tr>
+<tr>
+<td><strong>击穿</strong></td>
+<td>热点 key 过期</td>
+<td>并发打 DB</td>
+<td>互斥锁&#x2F;逻辑过期</td>
+</tr>
+<tr>
+<td><strong>雪崩</strong></td>
+<td>大量 key 同时过期</td>
+<td>集体失效</td>
+<td>随机 TTL&#x2F;集群&#x2F;限流</td>
+</tr>
+</tbody></table>
+<hr>
+<h1 id="第三篇：缓存一致性"><a href="#第三篇：缓存一致性" class="headerlink" title="第三篇：缓存一致性"></a>第三篇：缓存一致性</h1><h2 id="3-1-先删缓存-vs-先删数据库"><a href="#3-1-先删缓存-vs-先删数据库" class="headerlink" title="3.1 先删缓存 vs 先删数据库"></a>3.1 先删缓存 vs 先删数据库</h2><p><strong>先删缓存的问题</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1. 删除缓存</span><br><span class="line">2.          读取(旧值) → 写入缓存(旧值)</span><br><span class="line">3. 更新数据库</span><br><span class="line">❌ 结果: 缓存是旧值，数据库是新值</span><br></pre></td></tr></table></figure>
+
+<p><strong>先更新数据库的问题</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1. 更新数据库</span><br><span class="line">2.          读取(新值) → 写入缓存</span><br><span class="line">3. 删除缓存</span><br><span class="line">❌ 结果: 如果步骤2在步骤3之前，缓存是旧值</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-2-解决方案"><a href="#3-2-解决方案" class="headerlink" title="3.2 解决方案"></a>3.2 解决方案</h2><table>
+<thead>
+<tr>
+<th>方案</th>
+<th>做法</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>分布式锁</strong></td>
+<td>串行化读写操作</td>
+<td>强一致性要求</td>
+</tr>
+<tr>
+<td><strong>Canal</strong></td>
+<td>监听 binlog 异步更新</td>
+<td>大规模分布式</td>
+</tr>
+</tbody></table>
+<p><strong>分布式锁方案</strong>：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mutex := rs.NewMutex(<span class="string">&quot;lock:&quot;</span> + key)</span><br><span class="line">mutex.Lock()</span><br><span class="line"><span class="keyword">defer</span> mutex.Unlock()</span><br><span class="line"></span><br><span class="line">rdb.Del(ctx, key)    <span class="comment">// 1. 删除缓存</span></span><br><span class="line">updateDB(ctx, key)   <span class="comment">// 2. 更新数据库</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>Canal 方案</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">MySQL → Binlog → Canal → 解析 → Redis</span><br><span class="line">        ↓</span><br><span class="line">    异步消费，保证最终一致</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="第四篇：持久化机制"><a href="#第四篇：持久化机制" class="headerlink" title="第四篇：持久化机制"></a>第四篇：持久化机制</h1><h2 id="4-1-RDB（快照）"><a href="#4-1-RDB（快照）" class="headerlink" title="4.1 RDB（快照）"></a>4.1 RDB（快照）</h2><p><strong>原理</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Redis → fork() → 子进程 → 写入 dump.rdb → 替换旧文件</span><br></pre></td></tr></table></figure>
+
+<p><strong>特点</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>优点</th>
+<th>缺点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>文件紧凑，适合备份</td>
+<td>可能丢失最后快照后的数据</td>
+</tr>
+<tr>
+<td>恢复速度快</td>
+<td>fork() 时阻塞（大数据集）</td>
+</tr>
+</tbody></table>
+<h2 id="4-2-AOF（日志）"><a href="#4-2-AOF（日志）" class="headerlink" title="4.2 AOF（日志）"></a>4.2 AOF（日志）</h2><p><strong>原理</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">写命令 → AOF缓冲区 → 刷盘 → 重写压缩</span><br></pre></td></tr></table></figure>
+
+<p><strong>刷盘策略</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>策略</th>
+<th>安全性</th>
+<th>性能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>always</code></td>
+<td>最高</td>
+<td>最低</td>
+</tr>
+<tr>
+<td><code>everysec</code></td>
+<td>每秒</td>
+<td>中等</td>
+</tr>
+<tr>
+<td><code>no</code></td>
+<td>由系统决定</td>
+<td>最高</td>
+</tr>
+</tbody></table>
+<p><strong>特点</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>优点</th>
+<th>缺点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>最多丢失 1 秒数据</td>
+<td>文件体积大</td>
+</tr>
+<tr>
+<td>可读性好</td>
+<td>恢复速度慢</td>
+</tr>
+</tbody></table>
+<h2 id="4-3-RDB-vs-AOF-对比"><a href="#4-3-RDB-vs-AOF-对比" class="headerlink" title="4.3 RDB vs AOF 对比"></a>4.3 RDB vs AOF 对比</h2><table>
+<thead>
+<tr>
+<th>特性</th>
+<th>RDB</th>
+<th>AOF</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>文件大小</td>
+<td>小</td>
+<td>大</td>
+</tr>
+<tr>
+<td>恢复速度</td>
+<td>快</td>
+<td>慢</td>
+</tr>
+<tr>
+<td>数据安全性</td>
+<td>可能丢数据</td>
+<td>最多丢 1 秒</td>
+</tr>
+<tr>
+<td>资源消耗</td>
+<td>fork 时高</td>
+<td>持续 IO</td>
+</tr>
+</tbody></table>
+<p><strong>推荐策略</strong>：RDB + AOF 同时开启</p>
+<hr>
+<h1 id="第五篇：过期与淘汰"><a href="#第五篇：过期与淘汰" class="headerlink" title="第五篇：过期与淘汰"></a>第五篇：过期与淘汰</h1><h2 id="5-1-过期策略"><a href="#5-1-过期策略" class="headerlink" title="5.1 过期策略"></a>5.1 过期策略</h2><p><strong>惰性删除</strong>：访问时检查过期，删除</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Get</span><span class="params">(key <span class="type">string</span>)</span></span> <span class="keyword">interface</span>&#123;&#125; &#123;</span><br><span class="line">    data := getData(key)</span><br><span class="line">    <span class="keyword">if</span> data.Expired() &#123;</span><br><span class="line">        <span class="built_in">delete</span>(key)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> data.Value</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>定期删除</strong>：定时抽查部分 key</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> &#123;</span><br><span class="line">    sleep(<span class="number">100</span>ms)</span><br><span class="line">    <span class="keyword">for</span> i := <span class="number">0</span>; i &lt; <span class="number">20</span>; i++ &#123;</span><br><span class="line">        key := randomKey()</span><br><span class="line">        <span class="keyword">if</span> key.Expired() &#123;</span><br><span class="line">            <span class="built_in">delete</span>(key)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>Redis 实际</strong>：惰性删除 + 定期删除结合</p>
+<h2 id="5-2-淘汰策略（8种）"><a href="#5-2-淘汰策略（8种）" class="headerlink" title="5.2 淘汰策略（8种）"></a>5.2 淘汰策略（8种）</h2><table>
+<thead>
+<tr>
+<th>分类</th>
+<th>策略</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>不淘汰</strong></td>
+<td><code>noeviction</code></td>
+<td>内存满返回错误</td>
+</tr>
+<tr>
+<td><strong>全部 key</strong></td>
+<td><code>allkeys-lru</code></td>
+<td>LRU 最近最少使用</td>
+</tr>
+<tr>
+<td></td>
+<td><code>allkeys-lfu</code></td>
+<td>LFU 最不经常使用</td>
+</tr>
+<tr>
+<td></td>
+<td><code>allkeys-random</code></td>
+<td>随机淘汰</td>
+</tr>
+<tr>
+<td><strong>带过期时间</strong></td>
+<td><code>volatile-lru</code></td>
+<td>仅过期的 key 中 LRU</td>
+</tr>
+<tr>
+<td></td>
+<td><code>volatile-lfu</code></td>
+<td>仅过期的 key 中 LFU</td>
+</tr>
+<tr>
+<td></td>
+<td><code>volatile-random</code></td>
+<td>仅过期的 key 中随机</td>
+</tr>
+<tr>
+<td></td>
+<td><code>volatile-ttl</code></td>
+<td>淘汰即将过期的</td>
+</tr>
+</tbody></table>
+<p><strong>使用建议</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>推荐策略</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>热点数据 + 全量缓存</td>
+<td><code>allkeys-lru</code></td>
+</tr>
+<tr>
+<td>热点数据 + 部分缓存</td>
+<td><code>volatile-lru</code></td>
+</tr>
+<tr>
+<td>不确定访问模式</td>
+<td><code>allkeys-lfu</code></td>
+</tr>
+<tr>
+<td>消息队列</td>
+<td><code>volatile-ttl</code></td>
+</tr>
+</tbody></table>
+<hr>
+<h1 id="第六篇：分布式锁"><a href="#第六篇：分布式锁" class="headerlink" title="第六篇：分布式锁"></a>第六篇：分布式锁</h1><h2 id="6-1-基本实现"><a href="#6-1-基本实现" class="headerlink" title="6.1 基本实现"></a>6.1 基本实现</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 获取锁</span></span><br><span class="line">SET lock value NX EX 10</span><br><span class="line"></span><br><span class="line"><span class="comment"># 释放锁</span></span><br><span class="line">DEL lock</span><br></pre></td></tr></table></figure>
+
+<p><strong>问题</strong>：如果释放锁时 key 已过期被其他人获取，会误删别人的锁</p>
+<p><strong>解决</strong>：释放锁时校验 value 是否是自己的</p>
+<h2 id="6-2-Go-实现（redsync）"><a href="#6-2-Go-实现（redsync）" class="headerlink" title="6.2 Go 实现（redsync）"></a>6.2 Go 实现（redsync）</h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="string">&quot;github.com/go-redsync/redsync/v4&quot;</span></span><br><span class="line"></span><br><span class="line">mutex := rs.NewMutex(<span class="string">&quot;myLock&quot;</span>,</span><br><span class="line">    redsync.WithExpiry(<span class="number">10</span>*time.Second),</span><br><span class="line">    redsync.WithTries(<span class="number">100</span>),</span><br><span class="line">    redsync.WithRetryDelay(<span class="number">100</span>*time.Millisecond),</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">mutex.Lock()</span><br><span class="line"><span class="keyword">defer</span> mutex.Unlock()</span><br><span class="line"><span class="comment">// 业务逻辑</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="6-3-核心机制"><a href="#6-3-核心机制" class="headerlink" title="6.3 核心机制"></a>6.3 核心机制</h2><table>
+<thead>
+<tr>
+<th>机制</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>SETNX</strong></td>
+<td>保证原子性加锁</td>
+</tr>
+<tr>
+<td><strong>Lua 脚本</strong></td>
+<td>保证释放锁时的原子性校验</td>
+</tr>
+<tr>
+<td><strong>WatchDog</strong></td>
+<td>自动续期，防止业务未完成锁过期</td>
+</tr>
+<tr>
+<td><strong>可重入</strong></td>
+<td>同一线程可多次获取同一把锁</td>
+</tr>
+</tbody></table>
+<p><strong>WatchDog 原理</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">获取锁成功 → 启动 WatchDog → 每10秒检查是否持有锁</span><br><span class="line">                                          ↓</span><br><span class="line">                                    如果持有 → 续期30秒</span><br></pre></td></tr></table></figure>
+
+<h2 id="6-4-可重入锁实现"><a href="#6-4-可重入锁实现" class="headerlink" title="6.4 可重入锁实现"></a>6.4 可重入锁实现</h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> ReentrantLock <span class="keyword">struct</span> &#123;</span><br><span class="line">    mu     sync.Mutex</span><br><span class="line">    holder <span class="type">int64</span>  <span class="comment">// goroutine ID</span></span><br><span class="line">    count  <span class="type">int</span>    <span class="comment">// 重入次数</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(l *ReentrantLock)</span></span> Lock() <span class="type">error</span> &#123;</span><br><span class="line">    gid := getGoroutineID()</span><br><span class="line"></span><br><span class="line">    l.mu.Lock()</span><br><span class="line">    <span class="keyword">if</span> l.holder == gid &#123;  <span class="comment">// 同一 goroutine，直接重入</span></span><br><span class="line">        l.count++</span><br><span class="line">        l.mu.Unlock()</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">    &#125;</span><br><span class="line">    l.mu.Unlock()</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Redis 加锁</span></span><br><span class="line">    <span class="keyword">for</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> l.redis.SetNX(ctx, l.key, gid, <span class="number">30</span>*time.Second).Val() &#123;</span><br><span class="line">            l.mu.Lock()</span><br><span class="line">            l.holder = gid</span><br><span class="line">            l.count = <span class="number">1</span></span><br><span class="line">            l.mu.Unlock()</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">        &#125;</span><br><span class="line">        time.Sleep(<span class="number">100</span> * time.Millisecond)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="6-5-RedLock（多节点）"><a href="#6-5-RedLock（多节点）" class="headerlink" title="6.5 RedLock（多节点）"></a>6.5 RedLock（多节点）</h2><p><strong>问题</strong>：主从切换时锁丢失</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1. 主节点写入锁</span><br><span class="line">2. 主节点宕机</span><br><span class="line">3. 从节点升级为主节点</span><br><span class="line">4. ❌ 锁丢失</span><br></pre></td></tr></table></figure>
+
+<p><strong>解决</strong>：多节点同时加锁，超过半数成功才算获取成功</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 3个 Redis 节点同时加锁</span></span><br><span class="line">clients := []*redis.Client&#123;</span><br><span class="line">    redis.NewClient(<span class="string">&quot;redis1:6379&quot;</span>),</span><br><span class="line">    redis.NewClient(<span class="string">&quot;redis2:6379&quot;</span>),</span><br><span class="line">    redis.NewClient(<span class="string">&quot;redis3:6379&quot;</span>),</span><br><span class="line">&#125;</span><br><span class="line">rs := redsync.New(pools...)</span><br><span class="line">mutex := rs.NewMutex(<span class="string">&quot;lock&quot;</span>, redsync.WithTries(<span class="number">3</span>))</span><br><span class="line">mutex.Lock()</span><br></pre></td></tr></table></figure>
+
+<h2 id="分布式锁速记"><a href="#分布式锁速记" class="headerlink" title="分布式锁速记"></a>分布式锁速记</h2><table>
+<thead>
+<tr>
+<th>要点</th>
+<th>关键词</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>原子性</td>
+<td>SETNX + Lua</td>
+</tr>
+<tr>
+<td>续期</td>
+<td>WatchDog 每10秒</td>
+</tr>
+<tr>
+<td>可重入</td>
+<td>计数 + goroutine ID</td>
+</tr>
+<tr>
+<td>高可用</td>
+<td>RedLock 多节点</td>
+</tr>
+</tbody></table>
+<hr>
+<h1 id="第七篇：集群方案"><a href="#第七篇：集群方案" class="headerlink" title="第七篇：集群方案"></a>第七篇：集群方案</h1><h2 id="7-1-主从复制"><a href="#7-1-主从复制" class="headerlink" title="7.1 主从复制"></a>7.1 主从复制</h2><p><strong>全量同步</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">从节点连接 → 主节点 bgsave → 发送 RDB → 加载 RDB → 增量同步</span><br></pre></td></tr></table></figure>
+
+<p><strong>增量同步</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">主节点: 写命令 → repl_backlog_buffer</span><br><span class="line">从节点: 读取 → 执行</span><br></pre></td></tr></table></figure>
+
+<h2 id="7-2-哨兵模式"><a href="#7-2-哨兵模式" class="headerlink" title="7.2 哨兵模式"></a>7.2 哨兵模式</h2><p><strong>三大作用</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>作用</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>监控</td>
+<td>检查主从节点存活</td>
+</tr>
+<tr>
+<td>通知</td>
+<td>推送故障转移事件</td>
+</tr>
+<tr>
+<td>自动故障转移</td>
+<td>选举新主节点</td>
+</tr>
+</tbody></table>
+<p><strong>主观下线 vs 客观下线</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">主观下线: 单个哨兵认为节点挂了</span><br><span class="line">客观下线: 超过半数哨兵认为节点挂了</span><br></pre></td></tr></table></figure>
+
+<p><strong>脑裂问题</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">网络分区 → 出现两个主节点 → 数据不一致</span><br></pre></td></tr></table></figure>
+
+<p><strong>解决</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">min-replicas-to-write 1    # 至少1个从节点</span><br><span class="line">min-replicas-max-lag 10    # 延迟超过10秒拒绝写入</span><br></pre></td></tr></table></figure>
+
+<h2 id="7-3-分片集群"><a href="#7-3-分片集群" class="headerlink" title="7.3 分片集群"></a>7.3 分片集群</h2><p><strong>结构</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">        客户端</span><br><span class="line">          │</span><br><span class="line">          ↓</span><br><span class="line">    ┌───────────┐</span><br><span class="line">    │ 16384 slots │</span><br><span class="line">    └───────────┘</span><br><span class="line">    /      |      \</span><br><span class="line">   ↓       ↓       ↓</span><br><span class="line">[主节点1] [主节点2] [主节点3]</span><br></pre></td></tr></table></figure>
+
+<p><strong>槽位计算</strong>：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">slot := crc16.Checksum([]<span class="type">byte</span>(key), crc16.IBMTable) % <span class="number">16384</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="7-4-集群方案对比"><a href="#7-4-集群方案对比" class="headerlink" title="7.4 集群方案对比"></a>7.4 集群方案对比</h2><table>
+<thead>
+<tr>
+<th>方案</th>
+<th>特点</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>主从复制</td>
+<td>读写分离，手动故障转移</td>
+<td>读多写少</td>
+</tr>
+<tr>
+<td>哨兵模式</td>
+<td>自动故障转移</td>
+<td>高可用要求</td>
+</tr>
+<tr>
+<td>分片集群</td>
+<td>数据分片，横向扩展</td>
+<td>大数据量</td>
+</tr>
+</tbody></table>
+<hr>
+<h1 id="第八篇：Redis-为什么快"><a href="#第八篇：Redis-为什么快" class="headerlink" title="第八篇：Redis 为什么快"></a>第八篇：Redis 为什么快</h1><h2 id="8-1-四大原因"><a href="#8-1-四大原因" class="headerlink" title="8.1 四大原因"></a>8.1 四大原因</h2><table>
+<thead>
+<tr>
+<th>原因</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>内存存储</strong></td>
+<td>内存访问 ns 级别，比磁盘快 10万倍</td>
+</tr>
+<tr>
+<td><strong>单线程</strong></td>
+<td>避免上下文切换和锁竞争</td>
+</tr>
+<tr>
+<td><strong>IO多路复用</strong></td>
+<td>单线程监听多个 socket</td>
+</tr>
+<tr>
+<td><strong>高效数据结构</strong></td>
+<td>SDS&#x2F;压缩列表&#x2F;跳跃表&#x2F;字典</td>
+</tr>
+</tbody></table>
+<h2 id="8-2-IO-模型演进"><a href="#8-2-IO-模型演进" class="headerlink" title="8.2 IO 模型演进"></a>8.2 IO 模型演进</h2><p><strong>阻塞 IO</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">recv() → 阻塞等待 → 返回</span><br><span class="line">    (等待期间 CPU 空闲)</span><br></pre></td></tr></table></figure>
+
+<p><strong>非阻塞 IO</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">recv() → 返回 EAGAIN → 轮询 → ...</span><br><span class="line">    (CPU 忙等待，浪费资源)</span><br></pre></td></tr></table></figure>
+
+<p><strong>IO 多路复用</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">select/poll/epoll</span><br><span class="line">    ↓</span><br><span class="line">一个线程监听多个 socket</span><br><span class="line">    ↓</span><br><span class="line">有事件就绪 → 处理 → 继续监听</span><br></pre></td></tr></table></figure>
+
+<p><strong>Go 示例</strong>：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ln, _ := net.Listen(<span class="string">&quot;tcp&quot;</span>, <span class="string">&quot;:8080&quot;</span>)</span><br><span class="line"><span class="keyword">for</span> &#123;</span><br><span class="line">    conn, _ := ln.Accept()</span><br><span class="line">    <span class="keyword">go</span> handleConn(conn)  <span class="comment">// 每个连接一个 goroutine</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="8-3-Redis-网络模型"><a href="#8-3-Redis-网络模型" class="headerlink" title="8.3 Redis 网络模型"></a>8.3 Redis 网络模型</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">客户端 → IO多路复用(select/epoll) → 事件分发 → 命令处理 → 响应</span><br><span class="line">           ↑</span><br><span class="line">      单线程处理命令</span><br></pre></td></tr></table></figure>
+
+<p><strong>优势</strong>：</p>
+<ul>
+<li>单线程避免锁竞争</li>
+<li>IO多路复用支持高并发</li>
+<li>内部实现高效（如跳表）</li>
+</ul>
+<hr>
+<h1 id="第九篇：面试速记"><a href="#第九篇：面试速记" class="headerlink" title="第九篇：面试速记"></a>第九篇：面试速记</h1><h2 id="9-1-缓存问题速记"><a href="#9-1-缓存问题速记" class="headerlink" title="9.1 缓存问题速记"></a>9.1 缓存问题速记</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">穿透: 查不存在 → 布隆过滤器/空值缓存</span><br><span class="line">击穿: 热点过期 → 互斥锁/逻辑过期</span><br><span class="line">雪崩: 集体过期 → 随机TTL/集群/限流</span><br></pre></td></tr></table></figure>
+
+<h2 id="9-2-分布式锁速记"><a href="#9-2-分布式锁速记" class="headerlink" title="9.2 分布式锁速记"></a>9.2 分布式锁速记</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">SETNX + Lua = 原子加锁/释放</span><br><span class="line">WatchDog = 自动续期</span><br><span class="line">可重入 = 计数+goroutine ID</span><br><span class="line">RedLock = 多节点过半</span><br></pre></td></tr></table></figure>
+
+<h2 id="9-3-持久化速记"><a href="#9-3-持久化速记" class="headerlink" title="9.3 持久化速记"></a>9.3 持久化速记</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">RDB: 快照，冷备恢复快，可能丢数据</span><br><span class="line">AOF: 日志，每秒刷盘，最多丢1秒</span><br><span class="line">建议: 两者同时开启</span><br></pre></td></tr></table></figure>
+
+<h2 id="9-4-集群速记"><a href="#9-4-集群速记" class="headerlink" title="9.4 集群速记"></a>9.4 集群速记</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">主从: 读写分离，全量+增量同步</span><br><span class="line">哨兵: 自动故障转移，监控+通知+选主</span><br><span class="line">分片: 16384槽位，横向扩展</span><br></pre></td></tr></table></figure>
+
+<h2 id="9-5-快的原理速记"><a href="#9-5-快的原理速记" class="headerlink" title="9.5 快的原理速记"></a>9.5 快的原理速记</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">内存访问 + 单线程 + IO多路复用 + 高效数据结构</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    Mr.Liu
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://simplealong.github.io/2026/03/19/redis/redis-interview/" title="Redis 常见面试题">http://simplealong.github.io/2026/03/19/redis/redis-interview/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2026/03/12/AI/SKILL/" rel="next" title="trae skill">
+                <i class="fa fa-chevron-left"></i> trae skill
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        
+  <div class="bdsharebuttonbox">
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a>
+    <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+    <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a class="bds_count" data-cmd="count"></a>
+  </div>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": false,
+        "bdPic": ""
+      },
+      "share": {
+        "bdSize": "16",
+        "bdStyle": "0"
+      },
+      "image": {
+        "viewList": ["tsina", "douban", "sqq", "qzone", "weixin", "twi", "fbook"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      }
+    }
+  </script>
+
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='//bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.gif"
+                alt="" />
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/">
+              
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/simplealong" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:1161401670@qq.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://example.com/" title="测试连接" target="_blank">测试连接</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Redis-%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E9%A2%98"><span class="nav-number">1.</span> <span class="nav-text">Redis 常见面试题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%9B%AE%E5%BD%95"><span class="nav-number">2.</span> <span class="nav-text">目录</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E7%AF%87%EF%BC%9A%E5%9F%BA%E7%A1%80%E5%85%A5%E9%97%A8"><span class="nav-number">3.</span> <span class="nav-text">第一篇：基础入门</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Redis-%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">3.1.</span> <span class="nav-text">1. Redis 使用场景</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E7%AF%87%EF%BC%9A%E7%BC%93%E5%AD%98%E4%B8%89%E5%89%91%E5%AE%A2"><span class="nav-number">4.</span> <span class="nav-text">第二篇：缓存三剑客</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-%E7%BC%93%E5%AD%98%E7%A9%BF%E9%80%8F"><span class="nav-number">4.1.</span> <span class="nav-text">2.1 缓存穿透</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-%E7%BC%93%E5%AD%98%E5%87%BB%E7%A9%BF"><span class="nav-number">4.2.</span> <span class="nav-text">2.2 缓存击穿</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-3-%E7%BC%93%E5%AD%98%E9%9B%AA%E5%B4%A9"><span class="nav-number">4.3.</span> <span class="nav-text">2.3 缓存雪崩</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%93%E5%AD%98%E9%97%AE%E9%A2%98%E5%AF%B9%E6%AF%94%E9%80%9F%E8%AE%B0"><span class="nav-number">4.4.</span> <span class="nav-text">缓存问题对比速记</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AC%AC%E4%B8%89%E7%AF%87%EF%BC%9A%E7%BC%93%E5%AD%98%E4%B8%80%E8%87%B4%E6%80%A7"><span class="nav-number">5.</span> <span class="nav-text">第三篇：缓存一致性</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1-%E5%85%88%E5%88%A0%E7%BC%93%E5%AD%98-vs-%E5%85%88%E5%88%A0%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-number">5.1.</span> <span class="nav-text">3.1 先删缓存 vs 先删数据库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2-%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="nav-number">5.2.</span> <span class="nav-text">3.2 解决方案</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AC%AC%E5%9B%9B%E7%AF%87%EF%BC%9A%E6%8C%81%E4%B9%85%E5%8C%96%E6%9C%BA%E5%88%B6"><span class="nav-number">6.</span> <span class="nav-text">第四篇：持久化机制</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#4-1-RDB%EF%BC%88%E5%BF%AB%E7%85%A7%EF%BC%89"><span class="nav-number">6.1.</span> <span class="nav-text">4.1 RDB（快照）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-2-AOF%EF%BC%88%E6%97%A5%E5%BF%97%EF%BC%89"><span class="nav-number">6.2.</span> <span class="nav-text">4.2 AOF（日志）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-3-RDB-vs-AOF-%E5%AF%B9%E6%AF%94"><span class="nav-number">6.3.</span> <span class="nav-text">4.3 RDB vs AOF 对比</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AC%AC%E4%BA%94%E7%AF%87%EF%BC%9A%E8%BF%87%E6%9C%9F%E4%B8%8E%E6%B7%98%E6%B1%B0"><span class="nav-number">7.</span> <span class="nav-text">第五篇：过期与淘汰</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#5-1-%E8%BF%87%E6%9C%9F%E7%AD%96%E7%95%A5"><span class="nav-number">7.1.</span> <span class="nav-text">5.1 过期策略</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-2-%E6%B7%98%E6%B1%B0%E7%AD%96%E7%95%A5%EF%BC%888%E7%A7%8D%EF%BC%89"><span class="nav-number">7.2.</span> <span class="nav-text">5.2 淘汰策略（8种）</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AC%AC%E5%85%AD%E7%AF%87%EF%BC%9A%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81"><span class="nav-number">8.</span> <span class="nav-text">第六篇：分布式锁</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#6-1-%E5%9F%BA%E6%9C%AC%E5%AE%9E%E7%8E%B0"><span class="nav-number">8.1.</span> <span class="nav-text">6.1 基本实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-2-Go-%E5%AE%9E%E7%8E%B0%EF%BC%88redsync%EF%BC%89"><span class="nav-number">8.2.</span> <span class="nav-text">6.2 Go 实现（redsync）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-3-%E6%A0%B8%E5%BF%83%E6%9C%BA%E5%88%B6"><span class="nav-number">8.3.</span> <span class="nav-text">6.3 核心机制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-4-%E5%8F%AF%E9%87%8D%E5%85%A5%E9%94%81%E5%AE%9E%E7%8E%B0"><span class="nav-number">8.4.</span> <span class="nav-text">6.4 可重入锁实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-5-RedLock%EF%BC%88%E5%A4%9A%E8%8A%82%E7%82%B9%EF%BC%89"><span class="nav-number">8.5.</span> <span class="nav-text">6.5 RedLock（多节点）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81%E9%80%9F%E8%AE%B0"><span class="nav-number">8.6.</span> <span class="nav-text">分布式锁速记</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AC%AC%E4%B8%83%E7%AF%87%EF%BC%9A%E9%9B%86%E7%BE%A4%E6%96%B9%E6%A1%88"><span class="nav-number">9.</span> <span class="nav-text">第七篇：集群方案</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#7-1-%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6"><span class="nav-number">9.1.</span> <span class="nav-text">7.1 主从复制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-2-%E5%93%A8%E5%85%B5%E6%A8%A1%E5%BC%8F"><span class="nav-number">9.2.</span> <span class="nav-text">7.2 哨兵模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-3-%E5%88%86%E7%89%87%E9%9B%86%E7%BE%A4"><span class="nav-number">9.3.</span> <span class="nav-text">7.3 分片集群</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-4-%E9%9B%86%E7%BE%A4%E6%96%B9%E6%A1%88%E5%AF%B9%E6%AF%94"><span class="nav-number">9.4.</span> <span class="nav-text">7.4 集群方案对比</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AC%AC%E5%85%AB%E7%AF%87%EF%BC%9ARedis-%E4%B8%BA%E4%BB%80%E4%B9%88%E5%BF%AB"><span class="nav-number">10.</span> <span class="nav-text">第八篇：Redis 为什么快</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#8-1-%E5%9B%9B%E5%A4%A7%E5%8E%9F%E5%9B%A0"><span class="nav-number">10.1.</span> <span class="nav-text">8.1 四大原因</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-2-IO-%E6%A8%A1%E5%9E%8B%E6%BC%94%E8%BF%9B"><span class="nav-number">10.2.</span> <span class="nav-text">8.2 IO 模型演进</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-3-Redis-%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B"><span class="nav-number">10.3.</span> <span class="nav-text">8.3 Redis 网络模型</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AC%AC%E4%B9%9D%E7%AF%87%EF%BC%9A%E9%9D%A2%E8%AF%95%E9%80%9F%E8%AE%B0"><span class="nav-number">11.</span> <span class="nav-text">第九篇：面试速记</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#9-1-%E7%BC%93%E5%AD%98%E9%97%AE%E9%A2%98%E9%80%9F%E8%AE%B0"><span class="nav-number">11.1.</span> <span class="nav-text">9.1 缓存问题速记</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9-2-%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81%E9%80%9F%E8%AE%B0"><span class="nav-number">11.2.</span> <span class="nav-text">9.2 分布式锁速记</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9-3-%E6%8C%81%E4%B9%85%E5%8C%96%E9%80%9F%E8%AE%B0"><span class="nav-number">11.3.</span> <span class="nav-text">9.3 持久化速记</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9-4-%E9%9B%86%E7%BE%A4%E9%80%9F%E8%AE%B0"><span class="nav-number">11.4.</span> <span class="nav-text">9.4 集群速记</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9-5-%E5%BF%AB%E7%9A%84%E5%8E%9F%E7%90%86%E9%80%9F%E8%AE%B0"><span class="nav-number">11.5.</span> <span class="nav-text">9.5 快的原理速记</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2021 &mdash; <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr.Liu</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
